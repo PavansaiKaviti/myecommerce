@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 import colors from "colors";
+import Product from "@/models/products/Productmodel";
 let connected = false;
+
+//models
+Product();
 
 const connectdb = async () => {
   // Enable strict query mode throws if there is any undefined fields are used by Mongoodb,
   mongoose.set("strictQuery", true);
+  // if its already connected
   if (connected) {
     console.log("mongoosedb connected already...".inverse.red);
     return;
