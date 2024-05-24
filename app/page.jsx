@@ -1,7 +1,11 @@
-import React from "react";
+import Homeproperties from "@/components/homeproperties/Homeproperties";
 
-const page = () => {
-  return <div>home</div>;
+const page = async () => {
+  return (
+    <div>
+      <Homeproperties />
+    </div>
+  );
 };
 
 export default page;
