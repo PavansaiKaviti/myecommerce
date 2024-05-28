@@ -1,6 +1,6 @@
 import Homeproperties from "@/components/homeproperties/Homeproperties";
 
-const page = async () => {
+const page = () => {
   return (
     <div>
       <Homeproperties />
