@@ -12,10 +12,16 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-    },
-    fontFamily: {
-      sans: ["Graphik", "sans-serif"],
-      serif: ["Merriweather", "serif"],
+      fontFamily: {
+        sans: ["Graphik", "sans-serif"],
+        serif: ["Merriweather", "serif"],
+      },
+      gridTemplateColumns: {
+        "70/30": "70% 28%",
+      },
+      space: {
+        "5px": "5px",
+      },
     },
   },
   plugins: [],
