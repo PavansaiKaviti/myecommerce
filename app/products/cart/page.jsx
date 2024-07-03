@@ -3,13 +3,15 @@ import noItem from "@/public/images/noitems.jpg";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
-import { FaArrowLeft, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
   additems,
   removecartitems,
 } from "@/app/globalstore/reduxslices/cartslice/Cart";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
+import Errorpage from "@/components/errorpages/Errorpage";
+
 const cart = () => {
   const product = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -19,27 +21,15 @@ const cart = () => {
   };
 
   return product.items.length === 0 ? (
-    <div className="flex flex-col gap-5 justify-center items-center">
-      <div>
-        <Image
-          src={noItem}
-          alt="no items"
-          height={400}
-          className=" my-12"
-          priority={true}
-        />
-      </div>
-      <div className="text-3xl">Cart is empty....</div>
-      <div className="border rounded-xl bg-black hover:bg-blue-500 ">
-        <Link href="/products" className="p-3 text-white">
-          <FaArrowLeft className="inline m-1" />
-          Go Back
-        </Link>
-      </div>
-    </div>
+    <Errorpage
+      image={noItem}
+      height={400}
+      message="Cart is empty"
+      link="/products"
+    />
   ) : (
     <>
-      <div className="flex mx-10 my-14  md:flex-row gap-10 flex-col  justify-around">
+      <div className="flex mx-10 my-14  lg:flex-row  gap-10 flex-col  justify-around">
         {/* product items  */}
         <div className=" basis-1/2 ">
           <div className="flex flex-col gap-6 xl:my-12">
@@ -52,13 +42,14 @@ const cart = () => {
                 className=" flex flex-row border rounded-lg justify-between shadow-md "
                 key={index}
               >
-                <div id="image" className="felx-none">
+                <div id="image" className="flex-none h-10 w-10">
                   <Image
                     src={item.image}
-                    height={70}
-                    width={70}
+                    height={0}
+                    width={0}
+                    sizes="100"
                     alt="image"
-                    className="border rounded-lg m-2"
+                    className="border rounded-lg m-2 h-full w-full object-cover"
                   />
                 </div>
                 <div className="flex-none m-4">
@@ -77,7 +68,9 @@ const cart = () => {
                     }
                   >
                     {[...Array(item.countInStock).keys()].map((x) => (
-                      <option value={x + 1}>{x + 1}</option>
+                      <option value={x + 1} key={x}>
+                        {x + 1}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -106,11 +99,11 @@ const cart = () => {
             <p className="text-xl text-gray-500 font-bold">items :</p>
             <span className=" text-md font-bold">${product.itemsPrice}</span>
           </div>
-          <div className="border border-gray-100 mb-5"></div>
-          <div className="flex m-4 justify-between">
+          {/* <div className="border border-gray-100 mb-5"></div> */}
+          {/* <div className="flex m-4 justify-between">
             <p className="text-xl text-gray-500 font-bold">Taxes :</p>
             <span className="text-md font-bold">${product.taxPrice}</span>
-          </div>
+          </div> */}
           <div className="border border-gray-100 mb-5"></div>
           <div className="flex  m-4 justify-between">
             <p className="text-xl text-gray-500 font-bold">Delivery Fee :</p>
@@ -125,9 +118,11 @@ const cart = () => {
           </div>
           <div className="border border-gray-100 mb-5"></div>
           <div className="flex m-4 justify-around">
-            <button className="border p-2 rounded-lg bg-black text-white hover:bg-blue-500">
-              place oder
-            </button>
+            <Link href="/products/cart/shippingaddress">
+              <button className="border p-2 rounded-lg bg-black text-white hover:bg-blue-500">
+                place oder
+              </button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,0 +1,57 @@
+"use client";
+import React from "react";
+import pay from "@/public/images/pay.jpg";
+import Image from "next/image";
+import Odersteps from "@/components/odersteps/Odersteps";
+
+const Payment = () => {
+  const payMent = async () => {
+    const res = await fetch(`http://localhost:3000/api/checkout_sessions`, {
+      method: "POST",
+      body: JSON.stringify(product),
+      headers: { "content-type": "application/json" },
+    });
+    const data = await res.json();
+    window.location.assign(data);
+    // router.push(data);
+  };
+
+  return (
+    <div className=" flex flex-col items-center gap-20 mt-12">
+      <Odersteps step1={true} />
+      <div className=" flex flex-row w-1/2 ">
+        <div className="flex flex-col items-center justify-center ">
+          {/* <form className="flex flex-col  p-5  gap-3 text-lg">
+            <div className="border p-2  rounded-3xl bg-gray-100">
+              <input type="radio" className="mr-1" name="paymentMethod" />
+              <label htmlFor="paymentMethod" className=" text-nowrap">
+                cash on delivery
+              </label>
+            </div>
+            <div className="border p-2 flex rounded-3xl bg-gray-100">
+              <input type="radio" className="mr-1" name="paymentMethod" />
+              <label className=" text-nowrap">pay with Debit/Credit</label>
+            </div>
+          </form>
+          <button
+            type="submit"
+            className=" border rounded-3xl w-1/2 p-2 bg-black text-white text-lg"
+          >
+            pay
+          </button> */}
+
+        </div>
+        <div id="image">
+          <Image
+            src={pay}
+            className="w-full h-full  text-md"
+            alt="paypic"
+            priority={true}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Payment;
