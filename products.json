@@ -64,5 +64,38 @@
     "countInStock": 10,
     "rating": 4.5,
     "numReviews": 12
+  },
+  {
+    "name": "imac",
+    "image": "/images/imac.png",
+    "description": "iMac brings everything you love from iPhone to a gorgeous 24-inch display. iPhone lets you access what you need from iMac on the go",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 1499.99,
+    "countInStock": 14,
+    "rating": 5,
+    "numReviews": 12
+  },
+  {
+    "name": "Vision Pro",
+    "image": "/images/visionpro.jpg",
+    "description": "Apple Vision Pro seamlessly blends digital content with your physical space",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 3999.99,
+    "countInStock": 12,
+    "rating": 3.0,
+    "numReviews": 12
+  },
+  {
+    "name": "iwatch 8 series",
+    "image": "/images/watch.jpeg",
+    "description": "Apple Watch supercharges your Fitness+ experience with real‑time, personalized metrics onscreen, like your heart rate, calories burned, and Activity rings",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 399.99,
+    "countInStock": 10,
+    "rating": 4.5,
+    "numReviews": 12
   }
 ]
