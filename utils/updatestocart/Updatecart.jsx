@@ -11,13 +11,13 @@ const cartUpdate = (state) => {
   //calculate shipping price
   state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 10);
   //tax price
-  state.taxPrice = addDecimals(Number(0.15 * state.itemsPrice).toFixed(2));
+  // state.taxPrice = addDecimals(Number(0.09 * state.itemsPrice).toFixed(2));
   //total price
   state.totalPrice = (
-    Number(state.itemsPrice) +
-    Number(state.shippingPrice) +
-    Number(state.taxPrice)
+    Number(state.itemsPrice) + Number(state.shippingPrice)
   ).toFixed(2);
+  // Number(state.taxPrice)
+
   localStorage.setItem("cart", JSON.stringify(state));
 
   return state;
