@@ -20,6 +20,7 @@ const Card = () => {
           `${process.env.NEXT_PUBLIC_DOMAIN_API}/profile/coverimage`
         );
         const data = await res.json();
+        carousel;
         setcoverImage(data.image);
         setuser(profile.user);
       } catch (error) {
