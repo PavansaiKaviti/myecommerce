@@ -14,8 +14,21 @@ const userSchema = new mongoose.Schema(
     image: {
       type: String,
     },
-    products: [],
-    oders: [],
+    coverImage: {
+      type: String,
+    },
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
+    oders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Oder",
+      },
+    ],
     isAdmin: {
       type: Boolean,
       default: false,
