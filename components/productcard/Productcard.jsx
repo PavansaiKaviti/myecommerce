@@ -4,21 +4,23 @@ import Link from "next/link";
 
 const Productcard = ({ products }) => {
   return (
-    <section className="px-4 py-6">
+    <section className="px-4 pt-6">
       <div className="container-xl lg:container m-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
             <div className="rounded-xl shadow-lg relative" key={product._id}>
-              <Image
-                src={product.image}
-                alt="airpods"
-                className="w-full h-auto rounded-t-xl"
-                width={0}
-                height={0}
-                sizes="100"
-                priority={true}
-              />
-              <div className="p-4">
+              <div className="w-full h-1/2">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover rounded-t-xl"
+                  width={500}
+                  height={500}
+                  sizes="100"
+                  priority={true}
+                />
+              </div>
+              <div className="p-4 h-1/2">
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-bold">{product.name}</h3>
                 </div>
