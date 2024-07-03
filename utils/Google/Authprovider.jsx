@@ -37,6 +37,7 @@ export const authOptions = {
     },
     //modify user and add userid to session
     async session({ session }) {
+      await connectdb();
       // 1. get user from db
       const user = await User.findOne({ email: session.user.email });
       // 2. assign  user to session
