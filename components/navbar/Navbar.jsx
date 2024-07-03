@@ -2,7 +2,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaGoogle, FaBell, FaUser, FaBox, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaGoogle,
+  FaBell,
+  FaUser,
+  FaBox,
+  FaSignOutAlt,
+  FaCogs,
+} from "react-icons/fa";
 import profile from "@/assets/images/profile.png";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
@@ -121,12 +128,33 @@ const Navbar = () => {
                     id="user-menu-item-0"
                     onClick={() => setprofileNav((prev) => !prev)}
                   >
-                    <div className="flex text-left gap-2">
+                    <div className="flex text-left mt-1 gap-2">
                       <FaUser className="inline ml-2 text-xl" />
                       {session?.user?.name || "your profile"}
                     </div>
                   </Link>
-                  <div className="border border-gray-100 mb-3"></div>
+                  <div className="border border-gray-100 mb-1"></div>
+                  {session.isAdmin ? (
+                    <>
+                      <Link
+                        href="/profile/admin"
+                        className="block px-4 py-2 text-sm text-gray-700"
+                        role="menuitem"
+                        tabIndex="-1"
+                        id="user-menu-item-2"
+                        onClick={() => setprofileNav((prev) => !prev)}
+                      >
+                        <div className="flex text-left gap-2">
+                          <FaCogs className="inline ml-2 text-xl" />
+                          Dashboard
+                        </div>
+                      </Link>
+                      <div className="border border-gray-100 mb-1"></div>
+                    </>
+                  ) : (
+                    " "
+                  )}
+
                   <Link
                     href="/profile/notifications"
                     className="block px-4 py-2 text-sm text-gray-700"
@@ -140,7 +168,7 @@ const Navbar = () => {
                       view notifications
                     </div>
                   </Link>
-                  <div className="border border-gray-100 mb-3"></div>
+                  <div className="border border-gray-100 mb-1"></div>
                   <Link
                     href="/profile/oders"
                     className="block px-4 py-2 text-sm text-gray-700"
@@ -154,7 +182,7 @@ const Navbar = () => {
                       oders
                     </div>
                   </Link>
-                  <div className="border border-gray-100 mb-3"></div>
+                  <div className="border border-gray-100 mb-1"></div>
                   <Link
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700"
