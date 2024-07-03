@@ -6,40 +6,46 @@ const Footer = () => {
   return (
     <div
       id="headcontainer"
-      className="flex flex-row border h-1/4 w-full bg-gray-400 p-6 justify-around mt-auto"
+      className="flex md:flex-row flex-col border h-1/4 w-full bg-gray-400 p-6 md:justify-around items-center gap-4 mt-auto"
     >
       <div className=" flex flex-col justify-center ">
-        <p className=" text-4xl font-bold">LOGO</p>
+        <p className="md:text-4xl text-7xl font-bold">LOGO</p>
       </div>
-      <div>
-        <p className=" text-md font-bold">Company</p>
-        <p className=" hover:text-white hover:underline cursor-pointer">
+      <div className=" flex flex-col">
+        <p className=" md:text-md text-xl  font-bold md:text-left text-center">
+          Company
+        </p>
+        <p className=" hover:text-white hover:underline cursor-pointer md:text-left text-center">
           About
         </p>
-        <p className=" hover:text-white hover:underline cursor-pointer">
+        <p className=" hover:text-white hover:underline cursor-pointer md:text-left text-center">
           Privacy Policies
         </p>
-        <p className=" hover:text-white hover:underline cursor-pointer">
+        <p className=" hover:text-white hover:underline cursor-pointer md:text-left text-center">
           Contact Us
         </p>
-        <p className=" hover:text-white hover:underline cursor-pointer">
+        <p className=" hover:text-white hover:underline cursor-pointer md:text-left text-center">
           Technologies
         </p>
       </div>
-      <div className=" flex flex-col gap-1">
-        <div>
-          <p className=" text-md font-bold">About Me</p>
-          <p>Pavansai Kaviti</p>
+      <div className=" flex flex-col gap-1 ">
+        <div className="flex flex-col">
+          <p className="md:text-md text-xl font-bold md:text-left text-center">
+            About Me
+          </p>
+          <p className="md:text-left text-center">Pavansai Kaviti</p>
           <Link
             href={"mailto:kavitipavansai@gmail.com"}
-            className=" hover:text-white hover:underline"
+            className=" hover:text-white hover:underline md:text-left text-center"
           >
             kavitipavansai@gmail.com
           </Link>
         </div>
-        <div>
-          <p className=" text-md font-bold">Social Media:</p>
-          <div className="flex gap-2 text-white text-4xl">
+        <div className="flex flex-col">
+          <p className="md:text-md text-xl font-bold md:text-left text-center">
+            Social Media:
+          </p>
+          <div className="flex gap-2 text-white text-4xl md:text-left text-center">
             <Link href="https://www.facebook.com/">
               <FaFacebook />
             </Link>
