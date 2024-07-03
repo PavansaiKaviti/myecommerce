@@ -1,16 +1,34 @@
+import connectdb from "@/config/mongoose/Mongoosedb";
 import Product from "@/models/products/Productmodel";
 
 export const GET = async (request, { params }) => {
   try {
+    await connectdb();
     const { id } = params;
+
+    if (!id) {
+      return new Response(JSON.stringify({ message: "Invalid product ID" }), {
+        status: 400,
+      });
+    }
+
     const productfound = await Product.findById(id);
-    if (Object.keys(productfound).length === 0) {
-      return new Response(JSON.stringify({ message: "no product found" }), {
+
+    // const productpopulate = await productfound.populate("reviews");
+
+    // console.log(productpopulate);
+
+    if (!productfound) {
+      return new Response(JSON.stringify({ message: "No product found" }), {
         status: 404,
       });
     }
+
     return new Response(JSON.stringify(productfound), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify(error));
+    console.log(error);
+    return new Response(JSON.stringify({ message: "no products" }), {
+      status: 500,
+    });
   }
 };
