@@ -2,25 +2,27 @@ import "@/assets/styles/global.css";
 import Googleprovider from "@/components/googleprovider/Googleprovider";
 import Navbar from "@/components/navbar/Navbar";
 import Reduxprovider from "./globalstore/Provider";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
+import Footer from "@/components/footer/Footer";
 export const metadata = {
   title: "ecommerce",
 };
 
 const layout = ({ children }) => {
   return (
-    <Googleprovider>
-      <html lang="en">
+    <html lang="en">
+      <Googleprovider>
         <Reduxprovider>
-          <body>
+          <body className="flex flex-col min-h-screen">
             <Navbar />
             <main>{children}</main>
+            <Footer />
           </body>
         </Reduxprovider>
-        <ToastContainer />
-      </html>
-    </Googleprovider>
+        <Toaster />
+      </Googleprovider>
+    </html>
   );
 };
 
