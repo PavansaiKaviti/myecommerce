@@ -45,7 +45,12 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    reviews: [],
+    messages: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
   },
   { timestamps: true }
 );
