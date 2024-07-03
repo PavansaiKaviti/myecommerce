@@ -1,6 +1,6 @@
-export const fetchProducts = async () => {
+export const fetchimages = async () => {
   try {
-    const res = await fetch(`${process.env.DOMAIN_API}/products`, {
+    const res = await fetch(`${process.env.DOMAIN_API}/profile/upload`, {
       cache: "no-store",
     });
     if (res.status !== 200) {
