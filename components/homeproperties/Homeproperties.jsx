@@ -1,4 +1,5 @@
 "use client";
+import Loadingpage from "@/app/loading";
 import Productcard from "@/components/productcard/Productcard";
 import { useState, useEffect, useMemo } from "react";
 
@@ -58,7 +59,7 @@ const Homeproperties = () => {
 
   return (
     <div>
-      <Productcard products={shuffledProducts} />
+      {isLoaded ? <Productcard products={shuffledProducts} /> : <Loadingpage />}
     </div>
   );
 };
