@@ -1,13 +1,14 @@
 "use client";
-import { getInitialState } from "@/utils/localstorage/Localstorage";
 import cartUpdate from "@/utils/updatestocart/Updatecart";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = getInitialState("cart", {
-  items: [],
-  shippingAddress: {},
-  paymentMethod: "cash",
-});
+const initialState = localStorage.getItem("cart")
+  ? JSON.parse(localStorage.getItem("cart"))
+  : {
+      items: [],
+      shippingAddress: {},
+      paymentMethod: "cash",
+    };
 
 const cartSlice = createSlice({
   name: "Cart",
