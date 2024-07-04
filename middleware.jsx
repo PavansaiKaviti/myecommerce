@@ -6,5 +6,12 @@ export const config = {
     "/products/cart/shippingaddress",
     "/products/cart/payoder",
     "/products/cart/odered",
+    "/profile/admin",
+    "/profile/admin/users",
+    "/profile/admin/oders",
+    "/profile/admin/addproducts",
+    "/profile/notifications",
+    "/profile/oders",
+    "/profile/uploadcoverimage",
   ],
 };
