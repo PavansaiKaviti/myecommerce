@@ -20,9 +20,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/oders`
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/oders`);
         const data = await res.json();
         setOrders(data);
       } catch (error) {

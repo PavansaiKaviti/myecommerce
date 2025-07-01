@@ -32,7 +32,7 @@ const UploadImage = () => {
       const formdata = new FormData();
       formdata.append("image", file);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/profile/uploadimage`,
+        `${process.env.NEXT_PUBLIC_DOMAIN_API}/profile/uploadimage`,
         { method: "POST", body: formdata }
       );
       const data = await res.json();

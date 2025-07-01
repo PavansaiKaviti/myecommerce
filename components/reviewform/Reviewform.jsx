@@ -23,16 +23,13 @@ const Reviewform = ({ productid }) => {
 
     try {
       const newdata = { productid, ...formdata };
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/reviews`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newdata),
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newdata),
+      });
 
       if (!res.ok) {
         const errorData = await res.json();

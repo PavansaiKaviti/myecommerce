@@ -47,19 +47,19 @@ const Admin = () => {
       try {
         // Products
         const prodRes = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/admin/products`
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/products`
         );
         const prodData = await prodRes.json();
         const totalProducts = prodData.products ? prodData.products.length : 0;
         // Users
         const userRes = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/admin/users`
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/users`
         );
         const userData = await userRes.json();
         const totalUsers = userData.length || 0;
         // Orders
         const orderRes = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/admin/orders`
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/orders`
         );
         const orderData = await orderRes.json();
         const totalOrders = orderData.orders ? orderData.orders.length : 0;
@@ -85,7 +85,7 @@ const Admin = () => {
     const fetchallproducts = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/admin/products?page=${value}`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/products?page=${value}`,
           { cache: "no-store" }
         );
         if (!res.ok) {
@@ -111,7 +111,7 @@ const Admin = () => {
       return;
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/admin/deleteproduct/${id}`,
+        `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/deleteproduct/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();

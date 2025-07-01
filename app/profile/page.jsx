@@ -15,7 +15,7 @@ const Card = () => {
     const fetechimage = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/profile/coverimage`
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/profile/coverimage`
         );
         const data = await res.json();
         setcoverImage(data.image);

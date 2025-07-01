@@ -14,7 +14,7 @@ const Odered = () => {
     const fetchoder = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products/oder`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/products/oder`,
           { cache: "no-store" }
         );
         const data = await res.json();
