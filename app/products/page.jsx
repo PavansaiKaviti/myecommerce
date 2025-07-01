@@ -23,11 +23,11 @@ const Productpage = () => {
         console.log("Fetching products for page:", value);
         console.log(
           "API URL:",
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products?page=${value}`
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/products?page=${value}`
         );
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products?page=${value}`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/products?page=${value}`,
           { cache: "no-store" }
         );
 
