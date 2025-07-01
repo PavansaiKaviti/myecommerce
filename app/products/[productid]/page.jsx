@@ -28,11 +28,11 @@ const Singleproduct = () => {
     const fetchallproducts = async () => {
       try {
         const response1 = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products/${productid}`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/products/${productid}`,
           { cache: "force-cache" }
         );
         const response2 = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/reviews/${productid}`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews/${productid}`,
           { cache: "no-store" }
         );
         const [result1, result2] = await Promise.all([response1, response2]);
@@ -91,16 +91,13 @@ const Singleproduct = () => {
     }
     try {
       const newdata = { productid, ...formdata };
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/reviews`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newdata),
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newdata),
+      });
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -124,7 +121,7 @@ const Singleproduct = () => {
   const deleteReview = async (id) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/reviews/${id}`,
+        `${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
