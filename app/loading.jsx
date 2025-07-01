@@ -6,15 +6,21 @@ const override = {
   margin: "100px auto",
 };
 
-const Loadingpage = ({ loading }) => {
+const Loadingpage = ({ loading = true, size = 150, color = "black" }) => {
   return (
-    <ClipLoader
-      color="black"
-      loading={loading}
-      cssOverride={override}
-      size={150}
-      aria-label="Loading Spinner"
-    />
+    <div
+      className="flex items-center justify-center min-h-[200px]"
+      role="status"
+      aria-label="Loading content"
+    >
+      <ClipLoader
+        color={color}
+        loading={loading}
+        cssOverride={override}
+        size={size}
+        aria-label="Loading Spinner"
+      />
+    </div>
   );
 };
 

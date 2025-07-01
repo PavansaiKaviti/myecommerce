@@ -22,17 +22,17 @@ const Singleproduct = () => {
   const [qty, setQty] = useState(1);
   const { productid } = useParams();
   const dispatch = useDispatch();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const fetchallproducts = async () => {
       try {
         const response1 = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/products/${productid}`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products/${productid}`,
           { cache: "force-cache" }
         );
         const response2 = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews/${productid}`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/reviews/${productid}`,
           { cache: "no-store" }
         );
         const [result1, result2] = await Promise.all([response1, response2]);
@@ -55,7 +55,7 @@ const Singleproduct = () => {
       }
     };
     fetchallproducts();
-  }, [productid, refresh, loading]);
+  }, [productid, refresh]);
 
   const onChangeHandler = (e) => {
     setQty(e.target.value);
@@ -91,13 +91,16 @@ const Singleproduct = () => {
     }
     try {
       const newdata = { productid, ...formdata };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newdata),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/reviews`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newdata),
+        }
+      );
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -121,7 +124,7 @@ const Singleproduct = () => {
   const deleteReview = async (id) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews/${id}`,
+        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/reviews/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -133,9 +136,12 @@ const Singleproduct = () => {
     }
   };
 
-  return loading ? (
-    <Loadingpage loading={loading} />
-  ) : (
+  // Show loading while session is loading to prevent hydration mismatch
+  if (loading || status === "loading") {
+    return <Loadingpage loading={true} />;
+  }
+
+  return (
     <div>
       <form
         className="flex lg:flex-row m-10 gap-6 flex-col"
@@ -216,7 +222,7 @@ const Singleproduct = () => {
         </div>
       </form>
       <div className="m-10">
-        {!session ? (
+        {status === "unauthenticated" ? (
           <div>
             <div className=" p-2 mt-2 rounded-lg flex justify-center text-lg">
               <span>
@@ -231,7 +237,7 @@ const Singleproduct = () => {
               </span>
             </div>
           </div>
-        ) : (
+        ) : status === "authenticated" ? (
           <div>
             <form
               className="flex justify-center gap-4"
@@ -272,7 +278,7 @@ const Singleproduct = () => {
               </button>
             </form>
           </div>
-        )}
+        ) : null}
 
         <div className="text-xl font-medium mt-3">REVIEWS</div>
         {reviews.length === 0 ? (
@@ -282,7 +288,10 @@ const Singleproduct = () => {
         ) : (
           <div className=" grid lg:grid-cols-2 grid-cols-1 gap-4 m-3">
             {reviews.map((message, index) => (
-              <div className=" bg-gray-200 p-2 rounded-3xl flex flex-col gap-2 ">
+              <div
+                key={index}
+                className=" bg-gray-200 p-2 rounded-3xl flex flex-col gap-2 "
+              >
                 <div className=" p-2 flex flex-row gap-3 w-fit">
                   <div>
                     <Image
@@ -303,7 +312,8 @@ const Singleproduct = () => {
                 <div className=" p-2 w-fit">
                   <p className=" text-wrap">{message.message}</p>
                 </div>
-                {session?.user?.id === message?.user?._id ? (
+                {status === "authenticated" &&
+                session?.user?.id === message?.user?._id ? (
                   <div className=" flex flex-row gap-5 justify-center">
                     <div className=" w-3/4 flex justify-around">
                       {/* <button className=" rounded-lg bg-blue-500  hover:text-black w-32 px-3 h-8 text-white">
@@ -317,9 +327,7 @@ const Singleproduct = () => {
                       </button>
                     </div>
                   </div>
-                ) : (
-                  <></>
-                )}
+                ) : null}
               </div>
             ))}
           </div>

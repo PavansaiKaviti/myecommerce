@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "@/components/icons/Icons";
 
 const Errorpage = ({ image, height, message, link }) => {
   return (
@@ -16,12 +16,13 @@ const Errorpage = ({ image, height, message, link }) => {
         />
       </div>
       <div className="text-2xl">{message}....</div>
-      <div className="border flex justify-center rounded-xl bg-black hover:bg-blue-500 ">
-        <Link href={link} className="p-2 text-white">
-          <FaArrowLeft className="inline mr-1" />
-          Go Back
-        </Link>
-      </div>
+      <Link
+        href={link}
+        className="border flex items-center justify-center rounded-xl bg-black hover:bg-blue-500 p-2 text-white transition-colors"
+      >
+        <FaArrowLeft className="mr-1" />
+        Go Back
+      </Link>
     </div>
   );
 };

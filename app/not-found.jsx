@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "@/components/icons/Icons";
 import Image from "next/image";
 import pagelost from "@/public/images/pagenotfound.jpg";
 

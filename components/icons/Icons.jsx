@@ -1,0 +1,41 @@
+// Centralized icon imports to reduce bundle size
+// Only import the specific icons we actually use
+
+// Rating icons
+export { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
+
+// Navigation icons
+export { FaChevronLeft, FaChevronRight, FaArrowLeft } from "react-icons/fa";
+
+// User interface icons
+export {
+  FaUser,
+  FaEdit,
+  FaBoxOpen,
+  FaSignOutAlt,
+  FaCogs,
+  FaBars,
+  FaTimes,
+  FaBell,
+  FaCog,
+  FaCheckCircle,
+  FaTrash,
+  FaPlus,
+  FaUsers,
+  FaChartBar,
+  FaBox,
+  FaCheck,
+  FaStar as FaStarIcon,
+  FaTag,
+  FaGift,
+  FaCrown,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaUpload,
+  FaImage,
+  FaGoogle,
+} from "react-icons/fa";
+
+// Social media icons
+export { FaInstagram, FaFacebook, FaLinkedin, FaGithub } from "react-icons/fa";

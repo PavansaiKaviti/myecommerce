@@ -1,11 +1,11 @@
 "use client";
 import Loadingpage from "@/app/loading";
 import Productcard from "@/components/productcard/Productcard";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 // export async function getStaticProps() {
 //   try {
-//     const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/products`);
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products`);
 //     if (!res.ok) {
 //       throw new Error("Failed to fetch products");
 //     }
@@ -28,34 +28,34 @@ import { useState, useEffect, useMemo } from "react";
 
 const Homeproperties = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [shuffledProducts, setShuffledProducts] = useState([]);
+
+  // Debug: Log the environment variable
+  console.log("NEXT_PUBLIC_DOMAIN_API:", process.env.NEXT_PUBLIC_DOMAIN_API);
+
   useEffect(() => {
     const fetchallproducts = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/products`
-        );
+        const url = `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products`;
+        console.log("Fetching from:", url);
+        const res = await fetch(url);
         if (!res.ok) {
+          console.error("Fetch failed:", res.status, res.statusText);
           return;
         }
         const data = await res.json();
-        setProducts(data.products);
+        console.log("Fetched products:", data.products);
+        const shuffled = data.products
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3);
+        setShuffledProducts(shuffled);
         setIsLoaded(true);
       } catch (error) {
-        console.log(error);
+        console.error("Fetch error:", error);
       }
     };
-    if (products.length === 0) {
-      fetchallproducts();
-    }
-  }, [products]);
-  // const newProducts = products.sort((a, b) => Math.random() - 0.5).slice(0, 3);
-  const shuffledProducts = useMemo(() => {
-    if (isLoaded) {
-      return products.sort(() => Math.random() - 0.5).slice(0, 3);
-    }
-    return [];
-  }, [products, isLoaded]);
+    fetchallproducts();
+  }, []);
 
   return (
     <div>

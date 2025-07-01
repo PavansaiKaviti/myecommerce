@@ -3,6 +3,7 @@ import Adminlink from "@/components/adminlink/Adminlink";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { FaImage, FaPlus } from "react-icons/fa";
 
 const Addproducts = () => {
   const [productdata, setProductdata] = useState({
@@ -15,12 +16,15 @@ const Addproducts = () => {
   });
   const [file, setfile] = useState("");
   const router = useRouter();
+
   const onchangeHandler = (e) => {
     setProductdata({ ...productdata, [e.target.name]: e.target.value });
   };
+
   const onchangeimageHandler = (e) => {
     setfile(e.target.files[0]);
   };
+
   const onsubmitHandler = async (e) => {
     try {
       e.preventDefault();
@@ -47,143 +51,204 @@ const Addproducts = () => {
       console.log(error);
     }
   };
+
   return (
-    <div>
-      <div className="flex  justify-center mt-12">WELCOME ADMIN</div>
-      <div className="flex  justify-center mt-12">
-        <Adminlink />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Add New Product</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Create a new product listing for your store
+          </p>
+        </div>
       </div>
-      <div className="flex flex-col items-center h-3/4 w-full  mt-12 my-8">
-        <div className="border p-6 w-1/2 rounded-lg shadow-lg  bg-white">
-          <form className="space-y-6 text-md" onSubmit={onsubmitHandler}>
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-md  font-bold text-gray-700"
-              >
-                Name
-              </label>
+
+      {/* Content - Full Width */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <form
+          onSubmit={onsubmitHandler}
+          className="flex flex-col lg:flex-row gap-8"
+        >
+          {/* Left Side - Image Upload */}
+          <div className="lg:w-1/3">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              Product Image
+            </h2>
+            <label
+              htmlFor="image"
+              className="w-full aspect-square max-w-[400px] flex items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 cursor-pointer relative overflow-hidden group hover:border-blue-400 transition-colors"
+            >
+              {file ? (
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="Preview"
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-blue-400 transition-colors">
+                  <FaImage className="text-5xl mb-3" />
+                  <span className="text-lg font-medium">
+                    Drag & Drop or Click
+                  </span>
+                  <span className="text-sm text-gray-400 mt-1">
+                    Upload product image
+                  </span>
+                </div>
+              )}
               <input
-                type="text"
-                id="name"
-                name="name"
-                value={productdata.name}
-                placeholder="Name"
-                onChange={onchangeHandler}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                type="file"
+                id="image"
+                onChange={onchangeimageHandler}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                accept="image/*"
               />
+            </label>
+          </div>
+
+          {/* Right Side - Form Fields */}
+          <div className="lg:w-2/3">
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">
+              Product Details
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Product Name */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Product Name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={productdata.name}
+                  onChange={onchangeHandler}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  placeholder="Enter product name"
+                />
+              </div>
+
+              {/* Brand */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="brand"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Brand *
+                </label>
+                <input
+                  type="text"
+                  id="brand"
+                  name="brand"
+                  value={productdata.brand}
+                  onChange={onchangeHandler}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  placeholder="Enter brand name"
+                />
+              </div>
+
+              {/* Category */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Category *
+                </label>
+                <input
+                  type="text"
+                  id="category"
+                  name="category"
+                  value={productdata.category}
+                  onChange={onchangeHandler}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  placeholder="Enter category"
+                />
+              </div>
+
+              {/* Price */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Price ($) *
+                </label>
+                <input
+                  type="number"
+                  id="price"
+                  name="price"
+                  value={productdata.price}
+                  onChange={onchangeHandler}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  placeholder="0.00"
+                />
+              </div>
+
+              {/* Stock Quantity */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="countInStock"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Stock Quantity *
+                </label>
+                <input
+                  type="number"
+                  id="countInStock"
+                  name="countInStock"
+                  value={productdata.countInStock}
+                  onChange={onchangeHandler}
+                  required
+                  min="0"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  placeholder="0"
+                />
+              </div>
             </div>
-            <div>
+
+            {/* Description - Full Width */}
+            <div className="mt-6 space-y-2">
               <label
                 htmlFor="description"
-                className="block text-md  font-bold text-gray-700"
+                className="block text-sm font-medium text-gray-700"
               >
-                Description
+                Product Description *
               </label>
               <textarea
                 id="description"
                 name="description"
                 value={productdata.description}
-                placeholder="Description"
                 onChange={onchangeHandler}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+                rows="4"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base resize-none"
+                placeholder="Enter detailed product description..."
               />
             </div>
-            <div>
-              <label
-                htmlFor="brand"
-                className="block text-md  font-bold text-gray-700"
-              >
-                Brand
-              </label>
-              <input
-                type="text"
-                id="brand"
-                name="brand"
-                placeholder="Brand"
-                value={productdata.brand}
-                onChange={onchangeHandler}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="category"
-                className="block text-md  font-bold text-gray-700"
-              >
-                Category
-              </label>
-              <input
-                type="text"
-                id="category"
-                name="category"
-                value={productdata.category}
-                onChange={onchangeHandler}
-                placeholder="Category"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="price"
-                className="block text-md  font-bold text-gray-700"
-              >
-                Price
-              </label>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                value={productdata.price}
-                onChange={onchangeHandler}
-                placeholder="Price"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="countInStock"
-                className="block text-md  font-bold text-gray-700"
-              >
-                Count In Stock
-              </label>
-              <input
-                type="text"
-                id="countInStock"
-                name="countInStock"
-                value={productdata.countInStock}
-                onChange={onchangeHandler}
-                placeholder="Count In Stock"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="image"
-                className="block text-md  font-bold text-gray-700"
-              >
-                Image
-              </label>
-              <input
-                type="file"
-                id="image"
-                onChange={onchangeimageHandler}
-                className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-              <p className="mt-1 text-sm text-gray-600">
-                Upload an image file (jpg, png, etc.)
-              </p>
-            </div>
-            <div className=" flex justify-center">
+
+            {/* Submit Button */}
+            <div className="flex justify-end mt-8">
               <button
                 type="submit"
-                className="w-fit py-2 px-4 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 flex items-center gap-2"
               >
-                Submit
+                <FaPlus className="text-sm" />
+                Add Product
               </button>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );

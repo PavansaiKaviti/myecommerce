@@ -1,0 +1,90 @@
+/* Performance and Accessibility Optimizations */
+
+/* Reduce layout shift with proper image sizing */
+.image-optimized {
+  aspect-ratio: 1;
+  object-fit: contain;
+  background-color: #f9fafb;
+}
+
+/* Smooth scrolling for better UX */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus indicators for accessibility */
+.focus-visible:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize for high contrast mode */
+@media (prefers-contrast: high) {
+  .border-gray-200 {
+    border-color: #000;
+  }
+
+  .text-gray-500 {
+    color: #000;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-break {
+    page-break-before: always;
+  }
+}
+
+/* Loading skeleton animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Optimize for dark mode */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-optimized {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+}
+
+/* Reduce layout shift with proper button sizing */
+.button-consistent {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Optimize for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .touch-optimized {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}

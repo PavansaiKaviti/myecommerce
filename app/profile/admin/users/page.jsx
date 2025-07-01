@@ -1,9 +1,9 @@
 "use client";
-import Adminlink from "@/components/adminlink/Adminlink";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaUser, FaEnvelope, FaCrown } from "@/components/icons/Icons";
 import React, { useEffect, useState } from "react";
 import Loadingpage from "@/app/loading";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 const Adminusers = () => {
   const [users, setusers] = useState([]);
@@ -33,65 +33,103 @@ const Adminusers = () => {
   }, [refresh]);
 
   const deleteuser = async (id) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/deleteuser/${id}`,
-      { method: "DELETE" }
-    );
-    const data = await res.json();
-    const { message } = data;
-    toast.success(message);
-    setRefresh(true);
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/deleteuser/${id}`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      toast.success(data.message);
+      setRefresh(true);
+    } catch (error) {
+      toast.error("Failed to delete user");
+    }
   };
 
   return (
-    <div>
-      <div className="flex  justify-center mt-12">WELCOME ADMIN</div>
-      <div className="flex  justify-center mt-12">
-        <Adminlink />
+    <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 mt-8 mx-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">
+            Users Management
+          </h1>
+          <p className="text-gray-500 text-base">Manage all registered users</p>
+        </div>
+        <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg font-medium text-sm">
+          Total Users: {users.length}
+        </div>
       </div>
-      <div className="flex flex-col items-center  w-full mt-12 my-8">
+
+      {/* Users Grid */}
+      <div className="px-6">
         {users.length === 0 ? (
           <Loadingpage />
         ) : (
-          <div className=" w-3/4 lg:w-1/2">
-            <table className="table-auto w-full border-collapse border border-gray-200 rounded-lg">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="px-4 py-2 border border-gray-300">N0</th>
-                  <th className="px-4 py-2 border border-gray-300">ID</th>
-                  <th className="px-4 py-2 border border-gray-300">NAME</th>
-                  <th className="px-4 py-2 border border-gray-300">EMAIL</th>
-                  <th className="px-4 py-2 border border-gray-300">ADMIN</th>
-                  <th className="px-4 py-2 border border-gray-300">EDIT</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((x, index) => (
-                  <tr className="hover:bg-gray-100" key={x._id}>
-                    <td className="px-4 py-2 border border-gray-300">
-                      {index + 1}
-                    </td>
-                    <td className="px-4 py-2 border border-gray-300">
-                      {x._id}
-                    </td>
-                    <td className="px-4 py-2 border border-gray-300 text-nowrap">
-                      {x.username}
-                    </td>
-                    <td className="px-4 py-2 border border-gray-300">
-                      {x.email}
-                    </td>
-                    <td className="px-4 py-2 border border-gray-300">
-                      {x.isAdmin ? "yes" : "no"}
-                    </td>
-                    <td className="px-4 py-2 border border-gray-300 text-center text-lg text-nowrap">
-                      <button onClick={() => deleteuser(x._id)}>
-                        <FaTrash className="text-red-500 hover:text-blue-700 cursor-pointer inline" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {users.map((user, index) => (
+              <div
+                key={user._id}
+                className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition"
+              >
+                {/* User Avatar and Info */}
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                    {user.image ? (
+                      <Image
+                        src={user.image}
+                        alt={user.username || "User"}
+                        width={64}
+                        height={64}
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <FaUser className="text-blue-500 text-2xl" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="font-semibold text-gray-900 text-lg">
+                        {user.username || "No Name"}
+                      </div>
+                      {user.isAdmin && (
+                        <div className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1 flex-shrink-0">
+                          <FaCrown className="text-xs" />
+                          Admin
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-500 break-all">
+                      {user.email}
+                    </div>
+                  </div>
+                </div>
+
+                {/* User Details */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <FaEnvelope className="text-gray-400 flex-shrink-0" />
+                    <span className="break-all">{user.email}</span>
+                  </div>
+                  <div className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded font-mono break-all">
+                    ID: {user._id}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => deleteuser(user._id)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition flex items-center gap-2"
+                  >
+                    <FaTrash className="text-xs" />
+                    Delete User
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

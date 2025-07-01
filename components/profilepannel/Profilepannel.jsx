@@ -1,7 +1,12 @@
 import React from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { FaUser, FaEdit, FaBoxOpen, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaUser,
+  FaEdit,
+  FaBoxOpen,
+  FaSignOutAlt,
+} from "@/components/icons/Icons";
 
 const Profilepannel = () => {
   // const { isAdmin } = getuser();

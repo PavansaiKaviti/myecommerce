@@ -14,7 +14,7 @@ const Odered = () => {
     const fetchoder = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_DOMAIN_API}/products/oder`,
+          `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products/oder`,
           { cache: "no-store" }
         );
         const data = await res.json();
@@ -67,7 +67,6 @@ const Odered = () => {
                   >
                     <p className=" font-medium">{ele.name}</p>
                     <p>
-                      {/* <strong>id:</strong> */}
                       <Link
                         href={`${process.env.NEXT_PUBLIC_LOCAL_API}/products/${ele._id}`}
                         className=" underline text-blue-500"
@@ -78,23 +77,6 @@ const Odered = () => {
                     <p>${ele.price}</p>
                   </div>
                 ))}
-
-                {/* <div className="border flex justify-between gap-3 p-1">
-                  <p className=" font-medium">1633639346</p>
-                  <p>
-                    <strong>qty:</strong>
-                    <span> 3</span>
-                  </p>
-                  <p>$399.99</p>
-                </div>
-                <div className="border flex justify-between gap-3 p-1">
-                  <p className=" font-medium">1633639346</p>
-                  <p>
-                    <strong>qty:</strong>
-                    <span> 1</span>
-                  </p>
-                  <p>$199.99</p>
-                </div> */}
               </div>
               <div className="border flex flex-col text-right">
                 <div className="border p-1">

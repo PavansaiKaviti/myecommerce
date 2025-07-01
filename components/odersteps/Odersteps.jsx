@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle } from "@/components/icons/Icons";
 import Link from "next/link";
 
 const Odersteps = ({ step1, step2, step3 }) => {

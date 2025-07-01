@@ -1,18 +1,27 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
-import { FaUser, FaEdit, FaBoxOpen, FaSignOutAlt } from "react-icons/fa";
+import { FaUpload, FaImage } from "@/components/icons/Icons";
 import { toast } from "react-hot-toast";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const UploadImage = () => {
   const [file, setFile] = useState("");
-  const pathname = usePathname();
+  const [preview, setPreview] = useState("");
   const router = useRouter();
 
   const onchangeHandler = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreview(e.target.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
   };
+
   const onsubmitHandler = async (e) => {
     try {
       e.preventDefault();
@@ -23,7 +32,7 @@ const UploadImage = () => {
       const formdata = new FormData();
       formdata.append("image", file);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/profile/uploadimage`,
+        `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/profile/uploadimage`,
         { method: "POST", body: formdata }
       );
       const data = await res.json();
@@ -42,68 +51,74 @@ const UploadImage = () => {
   };
 
   return (
-    <>
-      <form
-        className="flex  justify-around items-center mt-32"
-        onSubmit={onsubmitHandler}
-        encType="multipart/form-data"
-      >
-        <div className="flex flex-col gap-2 self-center  h-fit w-fit">
-          <Link
-            href="/profile"
-            className=" text-black hover:text-white hover:bg-black border rounded-xl shadow-md p-3"
-          >
-            <FaUser className="inline mr-1" /> profile
-          </Link>
-          <Link
-            href="/profile/uploadcoverimage"
-            className={`${
-              pathname === "/profile/uploadcoverimage"
-                ? "text-white bg-black border"
-                : " "
-            } text-black  rounded-xl hover:text-white hover:bg-gray-500 border shadow-md p-3`}
-          >
-            <FaEdit className="inline mr-1" />
-            update Image
-          </Link>
-          {/* <Link
-        href="/"
-        className=" text-black hover:text-white hover:bg-black border rounded-xl shadow-md  p-3"
-      >
-        <FaEdit className="inline mr-1" />
-        update password
-      </Link> */}
-          <Link
-            href={`${process.env.NEXT_PUBLIC_LOCAL_API}/profile/oders`}
-            className=" text-black hover:text-white hover:bg-black border rounded-xl shadow-md  p-3"
-          >
-            <FaBoxOpen className="inline mr-1" /> oders
-          </Link>
-          <Link
-            href="/"
-            className=" text-black hover:text-white hover:bg-black border rounded-xl shadow-md p-3"
-          >
-            <FaSignOutAlt className="inline mr-1" />
-            logout
-          </Link>
-        </div>
-        <div className=" flex  justify-center items-center flex-row gap-66 h-96 w-1/2 ">
-          <div className=" w-fit h-1/2 flex flex-col items-start justify-around p-2 gap-2 rounded-xl shadow-md">
-            <div className=" p-2 text-xl">
-              <label htmlFor="">Upload cover image</label>
-            </div>
-            <div className="border rounded-xl  p-2">
-              <input type="file" onChange={onchangeHandler} />
-            </div>
-            <div className=" flex justify-center text-xl w-full ">
-              <div className=" p-2  bg-black text-white rounded-xl hover:bg-gray-500">
-                <button>upload</button>
-              </div>
-            </div>
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+      <div className="max-w-md mx-auto">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FaImage className="w-8 h-8 text-blue-600" />
           </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Upload Cover Image
+          </h2>
+          <p className="text-gray-600">Update your profile cover image</p>
         </div>
-      </form>
-    </>
+
+        <form onSubmit={onsubmitHandler} className="space-y-6">
+          {/* File Upload Area */}
+          <div className="space-y-4">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+              <input
+                type="file"
+                onChange={onchangeHandler}
+                accept="image/*"
+                className="hidden"
+                id="file-upload"
+              />
+              <label htmlFor="file-upload" className="cursor-pointer">
+                <div className="space-y-4">
+                  <FaUpload className="w-8 h-8 text-gray-400 mx-auto" />
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium text-blue-600 hover:text-blue-500">
+                        Click to upload
+                      </span>{" "}
+                      or drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      PNG, JPG, GIF up to 10MB
+                    </p>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            {/* Preview */}
+            {preview && (
+              <div className="space-y-2">
+                <h3 className="text-sm font-medium text-gray-900">Preview:</h3>
+                <div className="relative h-32 bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Upload Button */}
+          <button
+            type="submit"
+            disabled={!file}
+            className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+          >
+            <FaUpload className="w-4 h-4" />
+            <span>Upload Image</span>
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

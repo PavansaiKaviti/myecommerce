@@ -10,7 +10,7 @@ const Payment = () => {
 
   const payMent = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_DOMAIN_API}/checkout_sessions`,
+      `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/checkout_sessions`,
       {
         method: "POST",
         body: JSON.stringify({ items, shippingAddress }),
