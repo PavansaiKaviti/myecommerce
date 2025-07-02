@@ -13,15 +13,14 @@ const endpointSecret = process.env.WEBHOOK_SECRET;
 
 export const POST = async (request) => {
   const rawbody = await request.text();
-  const res = await JSON.parse(rawbody);
-
   const sig = request.headers.get("Stripe-Signature");
   let event;
   try {
     event = stripe.webhooks.constructEvent(rawbody, sig, endpointSecret);
+    console.log("Stripe event type:", event.type);
 
     if (event.type === "checkout.session.completed") {
-      var checkoutSessionCompleted = event.data.object;
+      const checkoutSessionCompleted = event.data.object;
       const createoder = await Oder.create({
         user: checkoutSessionCompleted.metadata.user,
         items: JSON.parse(checkoutSessionCompleted.metadata.product),
@@ -37,25 +36,21 @@ export const POST = async (request) => {
         headers: { "Content-Type": "application/json" },
       });
     } else if (event.type === "checkout.session.expired") {
-      var checkoutSessionCompleted = event.data.object;
-      return new Response(JSON.stringify(checkoutSessionCompleted), {
+      return new Response(JSON.stringify(event.data.object), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     } else {
-      console.log("error");
-      return new Response(JSON.stringify("error"), {
-        status: 404,
+      // For all other events, acknowledge receipt
+      return new Response(JSON.stringify({ received: true }), {
+        status: 200,
         headers: { "Content-Type": "application/json" },
       });
     }
-
-    // ... handle other event types
-
-    // Return a response with the event data
   } catch (error) {
-    console.log(error);
-    return new Response({ error }, { status: 400 });
+    console.log("Stripe webhook error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+    });
   }
-  // Handle the event
 };

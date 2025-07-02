@@ -1,12 +1,21 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import pay from "@/public/images/pay.jpg";
 import Image from "next/image";
 import Odersteps from "@/components/odersteps/Odersteps";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const Payment = () => {
   const { items, shippingAddress } = useSelector((state) => state.cart);
+  const router = useRouter();
+
+  useEffect(() => {
+    // If shipping address is missing, redirect to shipping step
+    if (!shippingAddress || !shippingAddress.address) {
+      router.replace("/products/cart/shippingaddress");
+    }
+  }, [shippingAddress, router]);
 
   const payMent = async () => {
     const res = await fetch(

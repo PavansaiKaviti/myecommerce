@@ -50,32 +50,36 @@ const Shippingpage = () => {
     }
   };
   return (
-    <div className="flex flex-col items-center  gap-20 mt-12  ">
+    <div className="flex flex-col items-center gap-12 mt-12 min-h-screen bg-gray-50">
       <Odersteps step1={true} step2={false} step3={false} />
-      <div className="flex flex-col-reverse lg:flex-row  w-3/4 p-5  items-center">
+      <div className="flex flex-col-reverse lg:flex-row w-full max-w-4xl mx-auto items-center px-2 sm:px-6 lg:px-8">
+        {/* Form Card */}
         <form
-          className="flex flex-col justify-center w-1/2 gap-2 "
+          className="flex flex-col justify-center w-full lg:w-1/2 bg-white rounded-2xl shadow-lg p-8 gap-4 border border-gray-100"
           onSubmit={onsubmitHandler}
         >
-          <div className=" gap-2 mb-2">
-            <p className="text-3xl">Shipping Address: </p>
+          <div className="mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-1">
+              Shipping Address
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Enter your shipping details to proceed to payment.
+            </p>
           </div>
-          <div className=" gap-2">
+          <input
+            type="text"
+            className="w-full h-12 rounded-lg p-3 border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            placeholder="Address"
+            value={formdata.address}
+            onChange={onchangeHandler}
+            name="address"
+            required
+          />
+          <div className="flex flex-col sm:flex-row gap-4">
             <input
               type="text"
-              className="w-full h-12 rounded-xl p-2 border bg-gray-100"
-              placeholder="Address"
-              value={formdata.address}
-              onChange={onchangeHandler}
-              name="address"
-              required
-            />
-          </div>
-          <div className=" flex gap-2">
-            <input
-              type="text"
-              className="w-1/2 h-12 rounded-xl p-2 border  bg-gray-100"
-              placeholder="phone"
+              className="w-full h-12 rounded-lg p-3 border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              placeholder="Phone"
               value={formdata.phone}
               onChange={onchangeHandler}
               name="phone"
@@ -83,19 +87,19 @@ const Shippingpage = () => {
             />
             <input
               type="text"
-              className="w-1/2 h-12  rounded-xl p-2 border  bg-gray-100"
-              placeholder="city"
+              className="w-full h-12 rounded-lg p-3 border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              placeholder="City"
               value={formdata.city}
               onChange={onchangeHandler}
               name="city"
               required
             />
           </div>
-          <div className=" flex  gap-2">
+          <div className="flex flex-col sm:flex-row gap-4">
             <input
               type="text"
-              className="w-1/2 h-12  rounded-xl p-2 border  bg-gray-100"
-              placeholder="state"
+              className="w-full h-12 rounded-lg p-3 border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              placeholder="State"
               value={formdata.state}
               onChange={onchangeHandler}
               name="state"
@@ -103,7 +107,7 @@ const Shippingpage = () => {
             />
             <input
               type="text"
-              className="w-1/2 h-12  rounded-xl p-2 border  bg-gray-100"
+              className="w-full h-12 rounded-lg p-3 border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
               placeholder="Zipcode"
               value={formdata.zipcode}
               onChange={onchangeHandler}
@@ -111,21 +115,25 @@ const Shippingpage = () => {
               required
             />
           </div>
-          <div className=" flex mt-2  gap-2 justify-center">
-            <button className="border p-2 rounded-xl bg-black text-white">
-              submit
-            </button>
-          </div>
+          <button
+            className="mt-4 w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg shadow transition-transform active:scale-95"
+            type="submit"
+          >
+            Continue to Payment
+          </button>
         </form>
-        <div className=" w-1/2">
-          <Image
-            src={Shipping}
-            width={0}
-            height={0}
-            alt="shipping address"
-            sizes="100 h-full w-full"
-            priority={true}
-          />
+        {/* Image Side */}
+        <div className="w-full lg:w-1/2 flex justify-center items-center mb-8 lg:mb-0">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xs xl:max-w-sm">
+            <Image
+              src={Shipping}
+              width={400}
+              height={400}
+              alt="shipping address"
+              className="rounded-2xl object-cover w-full h-auto shadow-md"
+              priority={true}
+            />
+          </div>
         </div>
       </div>
     </div>

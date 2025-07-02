@@ -5,10 +5,22 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import { usePDF } from "react-to-pdf";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const Odered = () => {
   const [oder, setOder] = useState(" ");
   const { toPDF, targetRef } = usePDF({ filename: "invoice.pdf" });
+  const { shippingAddress } = useSelector((state) => state.cart);
+  const router = useRouter();
+
+  useEffect(() => {
+    // If shipping address is missing, redirect to shipping step
+    if (!shippingAddress || !shippingAddress.address) {
+      router.replace("/products/cart/shippingaddress");
+    }
+    // You can add more checks for payment if you store payment state
+  }, [shippingAddress, router]);
 
   useEffect(() => {
     const fetchoder = async () => {
