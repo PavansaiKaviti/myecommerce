@@ -40,9 +40,18 @@ const cartSlice = createSlice({
       state.shippingAddress = address;
       return cartUpdate(state);
     },
+    clearCart: (state) => {
+      state.items = [];
+      state.shippingAddress = {};
+      state.paymentMethod = "cash";
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("cart");
+      }
+      return cartUpdate(state);
+    },
   },
 });
 
-export const { addshippingaddress, additems, removecartitems } =
+export const { addshippingaddress, additems, removecartitems, clearCart } =
   cartSlice.actions;
 export default cartSlice.reducer;

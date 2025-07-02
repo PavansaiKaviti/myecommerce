@@ -21,20 +21,28 @@ export const POST = async (request) => {
 
     if (event.type === "checkout.session.completed") {
       const checkoutSessionCompleted = event.data.object;
-      const createoder = await Oder.create({
-        user: checkoutSessionCompleted.metadata.user,
-        items: JSON.parse(checkoutSessionCompleted.metadata.product),
-        shippindAddress: JSON.parse(
-          checkoutSessionCompleted.metadata.shippingAddress
-        ),
-        paidAt: new Date(Timeconvertion(checkoutSessionCompleted.created)),
-        paymentid: checkoutSessionCompleted.payment_intent,
-        totalPrice: checkoutSessionCompleted.amount_total * 0.01,
-      });
-      return new Response(JSON.stringify(createoder), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
+      try {
+        const createoder = await Oder.create({
+          user: checkoutSessionCompleted.metadata.user,
+          items: JSON.parse(checkoutSessionCompleted.metadata.product),
+          shippindAddress: JSON.parse(
+            checkoutSessionCompleted.metadata.shippingAddress
+          ),
+          paidAt: new Date(Timeconvertion(checkoutSessionCompleted.created)),
+          paymentid: checkoutSessionCompleted.payment_intent,
+          totalPrice: checkoutSessionCompleted.amount_total * 0.01,
+        });
+        console.log("Order created successfully:", createoder);
+        return new Response(JSON.stringify(createoder), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (orderError) {
+        console.log("Error creating order:", orderError);
+        return new Response(JSON.stringify({ error: orderError.message }), {
+          status: 500,
+        });
+      }
     } else if (event.type === "checkout.session.expired") {
       return new Response(JSON.stringify(event.data.object), {
         status: 200,

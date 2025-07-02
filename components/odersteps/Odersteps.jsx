@@ -4,8 +4,8 @@ import Link from "next/link";
 
 const Odersteps = ({ step1, step2, step3 }) => {
   return (
-    <div className="flex gap-4 w-fit p-2 text-xl flex-wrap">
-      <div className="flex">
+    <div className="flex gap-2 sm:gap-4 w-full justify-center p-2 text-base sm:text-xl flex-wrap">
+      <div className="flex items-center">
         {step1 ? (
           <Link
             href="/products/cart/shippingaddress"
@@ -23,8 +23,8 @@ const Odersteps = ({ step1, step2, step3 }) => {
           </span>
         )}
       </div>
-      <div className="border-b-2 w-14 mb-2"></div>
-      <div className="flex">
+      <div className="border-b-2 w-8 sm:w-14 mb-2 mx-1 sm:mx-2 self-center"></div>
+      <div className="flex items-center">
         {step2 ? (
           <Link href="/products/cart/payoder" className="hover:text-blue-500">
             <FaCheckCircle
@@ -39,8 +39,8 @@ const Odersteps = ({ step1, step2, step3 }) => {
           </span>
         )}
       </div>
-      <div className="border-b-2 w-14 mb-2"></div>
-      <div className="flex">
+      <div className="border-b-2 w-8 sm:w-14 mb-2 mx-1 sm:mx-2 self-center"></div>
+      <div className="flex items-center">
         {step3 ? (
           <Link href="/products/cart/odered" className="hover:text-blue-500">
             <FaCheckCircle

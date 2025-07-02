@@ -31,26 +31,39 @@ const Payment = () => {
     // router.push(data);
   };
 
+  const payWithCash = () => {
+    // Placeholder: redirect to order confirmation page
+    router.push("/products/cart/odered");
+  };
+
   return (
-    <div className=" flex flex-col items-center gap-20 mt-12">
+    <div className="flex flex-col items-center gap-10 mt-12 min-h-screen bg-gray-50">
       <Odersteps step1={true} step2={true} />
-      <div className=" flex lg:flex-row w-1/2 flex-col-reverse md:gap-2 ">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <div className="text-2xl  font-medium text-nowrap">
-            Payment Method:
+      <div className="flex flex-col lg:flex-row w-full max-w-2xl bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+        {/* Left: Payment options */}
+        <div className="flex flex-col justify-center items-center gap-6 p-8 w-full lg:w-1/2">
+          <div className="w-full flex flex-col gap-4">
+            <button
+              type="button"
+              className="w-full py-4 px-6 rounded-xl bg-green-600 text-white text-lg font-bold shadow-md hover:bg-green-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-300"
+              onClick={payWithCash}
+            >
+              Pay with Cash
+            </button>
+            <button
+              type="button"
+              className="w-full py-4 px-6 rounded-xl bg-blue-600 text-white text-lg font-bold shadow-md hover:bg-blue-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              onClick={payMent}
+            >
+              Pay with Credit / Debit
+            </button>
           </div>
-          <button
-            type="submit"
-            className=" border rounded-3xl w-fit p-2 bg-blue-500 text-white text-lg text-center text-nowrap hover:bg-blue-400 "
-            onClick={() => payMent()}
-          >
-            credit/debit card
-          </button>
         </div>
-        <div id="image">
+        {/* Right: Image */}
+        <div className="flex items-center justify-center bg-gray-100 lg:w-1/2 p-6">
           <Image
             src={pay}
-            className="w-full h-full  text-md"
+            className="object-contain rounded-lg shadow-sm max-h-48 w-auto"
             alt="paypic"
             priority={true}
           />

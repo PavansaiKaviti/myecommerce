@@ -5,14 +5,21 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import { usePDF } from "react-to-pdf";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { clearCart } from "@/app/globalstore/reduxslices/cartslice/Cart";
 
 const Odered = () => {
   const [oder, setOder] = useState(" ");
   const { toPDF, targetRef } = usePDF({ filename: "invoice.pdf" });
   const { shippingAddress } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    // Clear the cart when the order confirmation page loads
+    dispatch(clearCart());
+  }, [dispatch]);
 
   useEffect(() => {
     // If shipping address is missing, redirect to shipping step
