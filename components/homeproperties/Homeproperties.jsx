@@ -36,7 +36,7 @@ const Homeproperties = () => {
   useEffect(() => {
     const fetchallproducts = async () => {
       try {
-        const url = `${process.env.NEXT_PUBLIC_DOMAIN_API}/api/products`;
+        const url = `${process.env.NEXT_PUBLIC_DOMAIN_API}/products`;
         console.log("Fetching from:", url);
         const res = await fetch(url);
         if (!res.ok) {
