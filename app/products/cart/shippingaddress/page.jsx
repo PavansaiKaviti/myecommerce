@@ -50,22 +50,30 @@ const Shippingpage = () => {
     }
   };
   return (
-    <div className="flex flex-col items-center gap-12 mt-12 min-h-screen bg-gray-50">
-      <Odersteps step1={true} step2={false} step3={false} />
-      <div className="flex flex-col-reverse lg:flex-row w-full max-w-4xl mx-auto items-center px-2 sm:px-6 lg:px-8">
-        {/* Form Card */}
+    <div className="flex flex-col items-center min-h-screen bg-gray-50">
+      <div className="w-full flex justify-center mt-4 mb-6">
+        <Odersteps step1={true} step2={false} step3={false} />
+      </div>
+      {/* Centered container for image and form */}
+      <div className="w-full max-w-md mx-auto flex flex-col items-center px-2 p-4">
+        <Image
+          src={Shipping}
+          width={400}
+          height={200}
+          alt="shipping address"
+          className="w-full h-40 object-cover mb-6"
+          priority={true}
+        />
         <form
-          className="flex flex-col justify-center w-full lg:w-1/2 bg-white rounded-2xl shadow-lg p-8 gap-4 border border-gray-100"
+          className="flex flex-col justify-center w-full gap-4"
           onSubmit={onsubmitHandler}
         >
-          <div className="mb-4">
-            <h2 className="text-3xl font-bold text-gray-900 mb-1">
-              Shipping Address
-            </h2>
-            <p className="text-gray-500 text-sm">
-              Enter your shipping details to proceed to payment.
-            </p>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1 text-center">
+            Shipping Address
+          </h2>
+          <p className="text-gray-500 text-sm mb-2 text-center">
+            Enter your shipping details to proceed to payment.
+          </p>
           <input
             type="text"
             className="w-full h-12 rounded-lg p-3 border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
@@ -122,19 +130,6 @@ const Shippingpage = () => {
             Continue to Payment
           </button>
         </form>
-        {/* Image Side */}
-        <div className="w-full lg:w-1/2 flex justify-center items-center mb-8 lg:mb-0">
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xs xl:max-w-sm">
-            <Image
-              src={Shipping}
-              width={400}
-              height={400}
-              alt="shipping address"
-              className="rounded-2xl object-cover w-full h-auto shadow-md"
-              priority={true}
-            />
-          </div>
-        </div>
       </div>
     </div>
   );

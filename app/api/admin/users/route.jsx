@@ -1,47 +1,14 @@
 import connectdb from "@/config/mongoose/Mongoosedb";
 import User from "@/models/usermodel/Usermodel";
-import { getuser } from "@/utils/getuser/User";
+import { requireAdminUser } from "@/utils/getuser/User";
 
 export const dynamic = "force-dynamic";
 export const GET = async () => {
+  const adminCheck = await requireAdminUser();
+  if (!adminCheck.ok) return adminCheck.response;
   try {
     // Connect to the database
     await connectdb();
-    // Get the authenticated user
-    const userResponse = await getuser();
-    if (!userResponse?.user) {
-      return new Response(
-        JSON.stringify({ message: "User not authenticated" }),
-        {
-          status: 401,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    }
-
-    // Find the user in the database
-    const finduser = await User.findById(userResponse?.userid);
-    if (!finduser) {
-      return new Response(JSON.stringify({ message: "User not found" }), {
-        status: 404,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
-
-    // Check if the user is an admin
-    if (!finduser.isAdmin) {
-      return new Response(JSON.stringify({ message: "Not authorized" }), {
-        status: 403,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
-
     // Retrieve all users from the database
     const users = await User.find({});
     if (users.length === 0) {
@@ -52,7 +19,6 @@ export const GET = async () => {
         },
       });
     }
-
     // Return the list of users
     return new Response(JSON.stringify(users), {
       status: 200,

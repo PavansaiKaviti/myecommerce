@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Odersteps = ({ step1, step2, step3 }) => {
   return (
-    <div className="flex gap-2 sm:gap-4 w-full justify-center p-2 text-base sm:text-xl flex-wrap">
+    <div className="flex flex-row gap-2 sm:gap-4 w-full justify-center p-2 text-base sm:text-xl items-center overflow-x-auto whitespace-nowrap">
       <div className="flex items-center">
         {step1 ? (
           <Link

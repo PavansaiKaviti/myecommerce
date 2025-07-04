@@ -1,7 +1,6 @@
 import cloudinary from "@/config/cloudinary/Cloudinary";
 import Product from "@/models/products/Productmodel";
-import User from "@/models/usermodel/Usermodel";
-import { getuser } from "@/utils/getuser/User";
+import { requireAdminUser } from "@/utils/getuser/User";
 import { validateAndSanitize } from "@/utils/validation/InputValidation";
 import {
   SecurityMiddleware,
@@ -9,6 +8,9 @@ import {
 } from "@/utils/middleware/SecurityMiddleware";
 
 export const POST = async (request) => {
+  // Admin authentication/authorization
+  const adminCheck = await requireAdminUser();
+  if (!adminCheck.ok) return adminCheck.response;
   try {
     // Rate limiting
     const clientIP = SecurityMiddleware.getClientIP(request);
@@ -37,26 +39,6 @@ export const POST = async (request) => {
           },
         }
       );
-    }
-
-    // Authentication and authorization
-    const { user } = await getuser();
-    if (!user) {
-      return new Response(
-        JSON.stringify({ message: "User not authenticated" }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    const finduser = await User.findById(user.id);
-    if (!finduser?.isAdmin) {
-      return new Response(JSON.stringify({ message: "Not authorized" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      });
     }
 
     // Parse form data
@@ -138,14 +120,14 @@ export const POST = async (request) => {
 
     // Create product with validated data
     const uploadProduct = await Product.create({
-      user: finduser._id,
+      user: adminCheck.user._id,
       ...validation.value,
       image: result.secure_url,
     });
 
     // Log successful product creation
     SecurityMiddleware.logSecurityEvent("product_created", {
-      userId: user.id,
+      userId: adminCheck.user.id,
       productId: uploadProduct._id,
       productName: validation.value.name,
       severity: "info",

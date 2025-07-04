@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FaGoogle,
   FaBell,
@@ -11,6 +11,7 @@ import {
   FaCogs,
   FaBars,
   FaTimes,
+  FaSearch,
 } from "@/components/icons/Icons";
 import profile from "@/assets/images/profile.png";
 import { useState, useEffect } from "react";
@@ -20,10 +21,12 @@ import { useSelector } from "react-redux";
 const Navbar = () => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
   const [providers, setproviders] = useState(null);
   const [profileNav, setprofileNav] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { items } = useSelector((state) => state.cart);
   const numofitems = items.length;
 
@@ -44,6 +47,20 @@ const Navbar = () => {
     setMobileMenu(false);
     setprofileNav(false);
   }, [pathname]);
+
+  // Handle search submission
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  };
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   // Prevent hydration mismatch by not rendering cart count until client-side
   const shouldShowCartCount =
@@ -101,11 +118,21 @@ const Navbar = () => {
             </Link>
             {/* Search bar (desktop) */}
             <div className="hidden lg:block ml-4">
-              <input
-                type="text"
-                className="w-48 h-9 px-4 py-2 border rounded-xl focus:outline-none focus:border-gray-500"
-                placeholder="Search..."
-              />
+              <form onSubmit={handleSearch} className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="w-48 h-9 px-4 py-2 pr-10 border rounded-xl focus:outline-none focus:border-gray-500"
+                  placeholder="Search products..."
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <FaSearch className="w-4 h-4" />
+                </button>
+              </form>
             </div>
           </div>
 
@@ -262,11 +289,21 @@ const Navbar = () => {
           </Link>
           {/* Search bar (mobile) */}
           <div className="pt-2">
-            <input
-              type="text"
-              className="w-full h-9 px-4 py-2 border rounded-xl focus:outline-none focus:border-gray-500"
-              placeholder="Search..."
-            />
+            <form onSubmit={handleSearch} className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full h-9 px-4 py-2 pr-10 border rounded-xl focus:outline-none focus:border-gray-500"
+                placeholder="Search products..."
+              />
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <FaSearch className="w-4 h-4" />
+              </button>
+            </form>
           </div>
           {/* Profile/Login (mobile) */}
           <div className="pt-2">

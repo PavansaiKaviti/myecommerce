@@ -35,6 +35,7 @@ export {
   FaUpload,
   FaImage,
   FaGoogle,
+  FaSearch,
 } from "react-icons/fa";
 
 // Social media icons

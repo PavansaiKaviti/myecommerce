@@ -37,7 +37,7 @@ const Payment = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-10 mt-12 min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center gap-10 mt-0 min-h-screen bg-gray-50">
       <Odersteps step1={true} step2={true} />
       <div className="flex flex-col lg:flex-row w-full max-w-2xl bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
         {/* Left: Payment options */}

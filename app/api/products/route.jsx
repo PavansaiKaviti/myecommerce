@@ -31,7 +31,24 @@ export const GET = async (request) => {
     await connectdb();
     const url = new URL(request.url);
     const pagesize = 6;
-    const totalProducts = await Product.countDocuments();
+
+    // Get search parameter
+    const searchQuery = url.searchParams.get("search") || "";
+
+    // Build search filter
+    let searchFilter = {};
+    if (searchQuery.trim()) {
+      searchFilter = {
+        $or: [
+          { name: { $regex: searchQuery, $options: "i" } },
+          { description: { $regex: searchQuery, $options: "i" } },
+          { brand: { $regex: searchQuery, $options: "i" } },
+          { category: { $regex: searchQuery, $options: "i" } },
+        ],
+      };
+    }
+
+    const totalProducts = await Product.countDocuments(searchFilter);
     const pages = Math.ceil(totalProducts / pagesize);
 
     let page = parseInt(url.searchParams.get("page")) || 1;
@@ -40,7 +57,9 @@ export const GET = async (request) => {
 
     const skip = (page - 1) * pagesize;
 
-    const products = await Product.find({}).limit(pagesize).skip(skip);
+    const products = await Product.find(searchFilter)
+      .limit(pagesize)
+      .skip(skip);
 
     if (products.length === 0) {
       return new Response(JSON.stringify({ message: "no products found" }), {
@@ -48,7 +67,9 @@ export const GET = async (request) => {
       });
     }
 
-    return new Response(JSON.stringify({ products, pages }), { status: 200 });
+    return new Response(JSON.stringify({ products, pages, searchQuery }), {
+      status: 200,
+    });
   } catch (error) {
     console.log(error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {

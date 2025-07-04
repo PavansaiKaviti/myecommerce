@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   nextPage,
   prevPage,
@@ -10,11 +11,18 @@ import { FaChevronLeft, FaChevronRight } from "@/components/icons/Icons";
 
 const Pagination = ({ page }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { pages } = useSelector((state) => state.page);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= pages) {
       dispatch(addpage(newPage));
+
+      // Update URL with search parameters preserved
+      const params = new URLSearchParams(searchParams);
+      params.set("page", newPage.toString());
+      router.push(`/products?${params.toString()}`);
     }
   };
 

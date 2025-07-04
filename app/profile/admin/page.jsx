@@ -27,9 +27,12 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { useRouter } from "next/navigation";
 
 const Admin = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const [isAdmin, setIsAdmin] = useState(null);
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [refresh, setRefresh] = useState(true);
   const [analytics, setAnalytics] = useState({
@@ -41,8 +44,33 @@ const Admin = () => {
   const { value } = useSelector((state) => state.page);
   const dispatch = useDispatch();
 
+  // Admin protection
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!session) {
+      router.replace("/api/auth/signin");
+      return;
+    }
+    // Fetch user profile to check isAdmin
+    const checkAdmin = async () => {
+      try {
+        const res = await fetch("/api/profile");
+        if (!res.ok) {
+          setIsAdmin(false);
+          return;
+        }
+        const user = await res.json();
+        setIsAdmin(user.isAdmin);
+      } catch {
+        setIsAdmin(false);
+      }
+    };
+    checkAdmin();
+  }, [session, status, router]);
+
   // Fetch analytics
   useEffect(() => {
+    if (!isAdmin) return; // Only fetch if admin is confirmed
     async function fetchAnalytics() {
       try {
         // Products
@@ -78,10 +106,11 @@ const Admin = () => {
       }
     }
     fetchAnalytics();
-  }, []);
+  }, [isAdmin]);
 
   // Fetch products for table
   useEffect(() => {
+    if (!isAdmin) return; // Only fetch if admin is confirmed
     const fetchallproducts = async () => {
       try {
         const res = await fetch(
@@ -104,7 +133,19 @@ const Admin = () => {
       }
     };
     fetchallproducts();
-  }, [refresh, value, dispatch]);
+  }, [refresh, value, dispatch, isAdmin]);
+
+  // Now handle conditional rendering after all hooks
+  if (status === "loading" || isAdmin === null) {
+    return <Loadingpage />;
+  }
+  if (!isAdmin) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-2xl font-bold text-red-500">Not authorized</div>
+      </div>
+    );
+  }
 
   const deleteProduct = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?"))
