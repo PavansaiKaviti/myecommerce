@@ -5,7 +5,12 @@
 export { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 // Navigation icons
-export { FaChevronLeft, FaChevronRight, FaArrowLeft } from "react-icons/fa";
+export {
+  FaChevronLeft,
+  FaChevronRight,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
 
 // User interface icons
 export {
@@ -45,6 +50,11 @@ export {
   FaClock,
   FaEye,
   FaEyeSlash,
+  FaCity,
+  FaGlobe,
+  FaMailBulk,
+  FaSpinner,
+  FaLock,
 } from "react-icons/fa";
 
 // Social media icons

@@ -252,12 +252,12 @@ const Navbar = () => {
                 </div>
               </div>
             ) : (
-              <button
+              <Link
+                href="/signin"
                 className="bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-900 transition"
-                onClick={() => signIn()}
               >
                 Sign In
-              </button>
+              </Link>
             )}
           </div>
 
@@ -359,12 +359,12 @@ const Navbar = () => {
                 </button>
               </div>
             ) : (
-              <button
+              <Link
+                href="/signin"
                 className="w-full bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-900 transition"
-                onClick={() => signIn()}
               >
                 Sign In
-              </button>
+              </Link>
             )}
           </div>
         </div>
