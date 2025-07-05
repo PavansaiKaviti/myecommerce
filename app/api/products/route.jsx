@@ -26,6 +26,17 @@ import Product from "@/models/products/Productmodel";
 
 export const dynamic = "force-dynamic";
 
+export const OPTIONS = async () => {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+};
+
 export const GET = async (request) => {
   try {
     await connectdb();
@@ -69,11 +80,23 @@ export const GET = async (request) => {
 
     return new Response(JSON.stringify({ products, pages, searchQuery }), {
       status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
     });
   } catch (error) {
     console.log(error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
     });
   }
 };

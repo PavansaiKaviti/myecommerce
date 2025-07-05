@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import colors from "colors";
 import Product from "@/models/products/Productmodel";
 import User from "@/models/usermodel/Usermodel";
 import Bgimage from "@/models/bgmodel/Backgroundimage";
@@ -17,15 +16,15 @@ const connectdb = async () => {
   mongoose.set("strictQuery", true);
   // if its already connected
   if (connected) {
-    console.log("mongoosedb connected already...".inverse.red);
+    console.log("mongoosedb connected already...");
     return;
   }
   try {
     await mongoose.connect(process.env.MONGOOSE_URL);
-    console.log("mongoosedb Connected...".inverse.green);
+    console.log("mongoosedb Connected...");
     connected = true;
   } catch (error) {
-    console.log("error in connecting db:".inverse.red, error);
+    console.log("error in connecting db:", error);
   }
 };
 
