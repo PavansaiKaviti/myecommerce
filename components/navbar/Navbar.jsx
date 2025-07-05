@@ -163,92 +163,161 @@ const Navbar = () => {
 
             {status === "loading" ? (
               // Show skeleton while session is loading
-              <div className="w-9 h-9 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
             ) : session ? (
               <div className="relative">
                 <button
                   type="button"
-                  className="flex items-center focus:outline-none"
+                  className="flex items-center gap-3 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                   onClick={() => setprofileNav((prev) => !prev)}
                   aria-label="Open user menu"
                 >
-                  <Image
-                    className="h-9 w-9 rounded-full border border-gray-200 dark:border-gray-600"
-                    src={session.user.image || profile}
-                    alt="profile"
-                    width={36}
-                    height={36}
-                  />
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <Image
+                        className="h-10 w-10 rounded-full border-2 border-gray-200 dark:border-gray-600 shadow-sm"
+                        src={session.user.image || profile}
+                        alt="profile"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
+                    </div>
+                    <div className="hidden lg:block text-left">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {session?.user?.name || "User"}
+                      </p>
+                    </div>
+                  </div>
                 </button>
-                {/* Profile dropdown */}
+                {/* Professional Profile dropdown */}
                 <div
                   className={`${
-                    profileNav ? "" : "hidden"
-                  } absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 focus:outline-none border border-gray-200 dark:border-gray-700`}
+                    profileNav
+                      ? "opacity-100 scale-100"
+                      : "opacity-0 scale-95 pointer-events-none"
+                  } absolute right-0 mt-3 w-80 origin-top-right rounded-xl bg-white dark:bg-gray-800 shadow-xl ring-1 ring-black ring-opacity-5 dark:ring-gray-700 focus:outline-none border border-gray-200 dark:border-gray-700 transition-all duration-200 ease-out`}
                   role="menu"
                   aria-orientation="vertical"
                   tabIndex="-1"
                 >
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    role="menuitem"
-                    tabIndex="-1"
-                    onClick={() => setprofileNav(false)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <FaUser className="text-lg" />
-                      {session?.user?.name || "Your Profile"}
+                  {/* User Info Header */}
+                  <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-4">
+                      <Image
+                        className="h-12 w-12 rounded-full border-2 border-gray-200 dark:border-gray-600"
+                        src={session.user.image || profile}
+                        alt="profile"
+                        width={48}
+                        height={48}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                          {session?.user?.name || "User"}
+                        </p>
+                        {session.isAdmin && (
+                          <span className="inline-flex items-center px-2 py-1 mt-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full">
+                            Admin
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </Link>
-                  <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                  {session.isAdmin && (
+                  </div>
+
+                  {/* Menu Items */}
+                  <div className="py-2">
                     <Link
-                      href="/profile/admin"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      href="/profile"
+                      className="flex items-center gap-3 px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                       role="menuitem"
                       tabIndex="-1"
                       onClick={() => setprofileNav(false)}
                     >
-                      <div className="flex items-center gap-2">
-                        <FaCogs className="text-lg" />
-                        Dashboard
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <FaUser className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Profile</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Manage your account
+                        </p>
                       </div>
                     </Link>
-                  )}
-                  <Link
-                    href="/profile/notifications"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    role="menuitem"
-                    tabIndex="-1"
-                    onClick={() => setprofileNav(false)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <FaBell className="text-lg" />
-                      Notifications
-                    </div>
-                  </Link>
-                  <Link
-                    href="/profile/oders"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    role="menuitem"
-                    tabIndex="-1"
-                    onClick={() => setprofileNav(false)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <FaBoxOpen className="text-lg" />
-                      Orders
-                    </div>
-                  </Link>
-                  <button
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => signOut()}
-                  >
-                    <div className="flex items-center gap-2">
-                      <FaSignOutAlt className="text-lg" />
-                      Sign Out
-                    </div>
-                  </button>
+
+                    {session.isAdmin && (
+                      <Link
+                        href="/profile/admin"
+                        className="flex items-center gap-3 px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                        role="menuitem"
+                        tabIndex="-1"
+                        onClick={() => setprofileNav(false)}
+                      >
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                          <FaCogs className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium">Admin Dashboard</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Manage store
+                          </p>
+                        </div>
+                      </Link>
+                    )}
+
+                    <Link
+                      href="/profile/notifications"
+                      className="flex items-center gap-3 px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                      role="menuitem"
+                      tabIndex="-1"
+                      onClick={() => setprofileNav(false)}
+                    >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
+                        <FaBell className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Notifications</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          View alerts
+                        </p>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/profile/oders"
+                      className="flex items-center gap-3 px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                      role="menuitem"
+                      tabIndex="-1"
+                      onClick={() => setprofileNav(false)}
+                    >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30">
+                        <FaBoxOpen className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Orders</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Track purchases
+                        </p>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Sign Out Section */}
+                  <div className="border-t border-gray-200 dark:border-gray-700 py-2">
+                    <button
+                      className="w-full flex items-center gap-3 px-6 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      onClick={() => signOut()}
+                    >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30">
+                        <FaSignOutAlt className="w-4 h-4 text-red-600 dark:text-red-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Sign Out</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Log out of your account
+                        </p>
+                      </div>
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -332,31 +401,98 @@ const Navbar = () => {
             </form>
           </div>
           {/* Profile/Login (mobile) */}
-          <div className="pt-2">
+          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
             {status === "loading" ? (
               // Show skeleton while session is loading
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
-                <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+              <div className="flex items-center gap-3 p-3">
+                <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse mb-2"></div>
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-32 animate-pulse"></div>
+                </div>
               </div>
             ) : session ? (
-              <div className="flex items-center gap-2">
-                <Image
-                  className="h-8 w-8 rounded-full border"
-                  src={session.user.image || profile}
-                  alt="profile"
-                  width={32}
-                  height={32}
-                />
-                <span className="font-medium text-gray-700">
-                  {session?.user?.name || "Your Profile"}
-                </span>
-                <button
-                  className="ml-auto text-red-600 hover:underline"
-                  onClick={() => signOut()}
-                >
-                  Sign Out
-                </button>
+              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="relative">
+                    <Image
+                      className="h-12 w-12 rounded-full border-2 border-gray-200 dark:border-gray-600"
+                      src={session.user.image || profile}
+                      alt="profile"
+                      width={48}
+                      height={48}
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-900 dark:text-white truncate">
+                      {session?.user?.name || "User"}
+                    </p>
+                    {session.isAdmin && (
+                      <span className="inline-flex items-center px-2 py-1 mt-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full">
+                        Admin
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-3 p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => setMobileMenu(false)}
+                  >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700">
+                      <FaUser className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                    </div>
+                    <span className="font-medium">Profile</span>
+                  </Link>
+
+                  {session.isAdmin && (
+                    <Link
+                      href="/profile/admin"
+                      className="flex items-center gap-3 p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      onClick={() => setMobileMenu(false)}
+                    >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                        <FaCogs className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <span className="font-medium">Admin Dashboard</span>
+                    </Link>
+                  )}
+
+                  <Link
+                    href="/profile/notifications"
+                    className="flex items-center gap-3 p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => setMobileMenu(false)}
+                  >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
+                      <FaBell className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+                    </div>
+                    <span className="font-medium">Notifications</span>
+                  </Link>
+
+                  <Link
+                    href="/profile/oders"
+                    className="flex items-center gap-3 p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => setMobileMenu(false)}
+                  >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30">
+                      <FaBoxOpen className="w-4 h-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <span className="font-medium">Orders</span>
+                  </Link>
+
+                  <button
+                    className="w-full flex items-center gap-3 p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    onClick={() => signOut()}
+                  >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30">
+                      <FaSignOutAlt className="w-4 h-4 text-red-600 dark:text-red-400" />
+                    </div>
+                    <span className="font-medium">Sign Out</span>
+                  </button>
+                </div>
               </div>
             ) : (
               <Link

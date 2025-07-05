@@ -1,13 +1,23 @@
 "use client";
-import { FaTrash, FaUser, FaEnvelope, FaCrown } from "@/components/icons/Icons";
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/toast/Toast";
+import {
+  FaTrash,
+  FaUser,
+  FaEnvelope,
+  FaCrown,
+  FaCalendar,
+} from "@/components/icons/Icons";
+import React from "react";
 import Loadingpage from "@/app/loading";
-import toast from "react-hot-toast";
 import Image from "next/image";
 
 const Adminusers = () => {
-  const [users, setusers] = useState([]);
-  const [refresh, setRefresh] = useState(true);
+  const { data: session, status } = useSession();
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { success, error } = useToast();
 
   useEffect(() => {
     const fetchallusers = async () => {
@@ -22,15 +32,15 @@ const Adminusers = () => {
           return;
         }
         const data = await res.json();
-        setusers(data);
+        setUsers(data);
       } catch (error) {
         console.log(error);
       } finally {
-        setRefresh(false);
+        setLoading(false);
       }
     };
     fetchallusers();
-  }, [refresh]);
+  }, []);
 
   const deleteuser = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
@@ -41,10 +51,9 @@ const Adminusers = () => {
         { method: "DELETE" }
       );
       const data = await res.json();
-      toast.success(data.message);
-      setRefresh(true);
+      success(data.message);
     } catch (error) {
-      toast.error("Failed to delete user");
+      error("Failed to delete user");
     }
   };
 
@@ -67,7 +76,9 @@ const Adminusers = () => {
 
       {/* Users Grid */}
       <div className="px-6">
-        {users.length === 0 ? (
+        {loading ? (
+          <Loadingpage />
+        ) : users.length === 0 ? (
           <Loadingpage />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

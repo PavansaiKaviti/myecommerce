@@ -1,4 +1,4 @@
-const { authOptions } = require("@/utils/Google/Authprovider");
+import { authOptions } from "@/utils/Google/Authprovider";
 import NextAuth from "next-auth/next";
 
 const handler = NextAuth(authOptions);

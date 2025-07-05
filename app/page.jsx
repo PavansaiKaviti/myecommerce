@@ -1,6 +1,21 @@
 import Carousel from "@/components/carousel/Carousel";
 import Homeproperties from "@/components/homeproperties/Homeproperties";
 
+export const metadata = {
+  title: "Dino",
+  description:
+    "Discover amazing products at Dino. Shop the latest trends in electronics, fashion, and lifestyle products with fast shipping and excellent customer service.",
+  keywords:
+    "Dino, shopping, e-commerce, electronics, fashion, lifestyle, online store",
+  openGraph: {
+    title: "Dino",
+    description:
+      "Discover amazing products at Dino. Shop the latest trends in electronics, fashion, and lifestyle products.",
+    type: "website",
+    locale: "en_US",
+  },
+};
+
 const page = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">

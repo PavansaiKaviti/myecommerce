@@ -30,9 +30,9 @@ const cartSlice = createSlice({
     },
     removecartitems: (state, action) => {
       //find item
-      const index = action.payload;
+      const itemId = action.payload;
       //remove item from state
-      state.items = state.items.filter((element) => element._id !== index._id);
+      state.items = state.items.filter((element) => element._id !== itemId);
       return cartUpdate(state);
     },
     addshippingaddress: (state, action) => {

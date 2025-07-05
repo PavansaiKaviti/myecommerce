@@ -55,6 +55,9 @@ export {
   FaMailBulk,
   FaSpinner,
   FaLock,
+  FaExclamationCircle,
+  FaInfoCircle,
+  FaTimesCircle,
 } from "react-icons/fa";
 
 // Social media icons

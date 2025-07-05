@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Rating from "../rating/Rating";
-import toast from "react-hot-toast";
+import { useToast } from "@/components/toast/Toast";
+import { FaStar, FaRegStar } from "@/components/icons/Icons";
 
 const Reviews = ({ review, session }) => {
+  const { success, error } = useToast();
+
   const deleteReview = async (id) => {
     try {
       const res = await fetch(
@@ -11,9 +14,9 @@ const Reviews = ({ review, session }) => {
         { cache: "no-store" }
       );
       const data = await res.json();
-      toast.success(data.message);
+      success(data.message);
     } catch (error) {
-      toast.error(error.data || error.message);
+      error(error.data || error.message);
     }
   };
 

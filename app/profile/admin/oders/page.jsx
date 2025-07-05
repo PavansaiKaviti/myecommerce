@@ -16,14 +16,16 @@ import {
   FaEye,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/toast/Toast";
 
 const Adminoders = () => {
   const [orders, setorders] = useState([]);
   const [refresh, setRefresh] = useState(true);
   const { value } = useSelector((state) => state.page);
   const dispatch = useDispatch();
+  const { success, error } = useToast();
 
   useEffect(() => {
     const fetchallorders = async () => {
@@ -58,10 +60,10 @@ const Adminoders = () => {
         { method: "DELETE" }
       );
       const data = await res.json();
-      toast.success(data.message);
+      success(data.message);
       setRefresh(true);
     } catch (error) {
-      toast.error("Failed to delete order");
+      error("Failed to delete order");
     }
   };
 

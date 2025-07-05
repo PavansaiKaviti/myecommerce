@@ -11,9 +11,12 @@ import {
   FaBoxOpen,
   FaChartBar,
   FaBox,
+  FaDollarSign,
+  FaArrowUp,
+  FaArrowDown,
 } from "@/components/icons/Icons";
 import Loadingpage from "@/app/loading";
-import toast from "react-hot-toast";
+import { useToast } from "@/components/toast/Toast";
 import { useSelector, useDispatch } from "react-redux";
 import Pagination from "@/components/pagination/Pagination";
 import { addpages } from "@/app/globalstore/reduxslices/pageSlice/Pageslice";
@@ -43,6 +46,7 @@ const Admin = () => {
   });
   const { value } = useSelector((state) => state.page);
   const dispatch = useDispatch();
+  const { success, error } = useToast();
 
   // Admin protection
   useEffect(() => {
@@ -158,10 +162,10 @@ const Admin = () => {
         { method: "DELETE" }
       );
       const data = await res.json();
-      toast.success(data.message);
+      success(data.message);
       setRefresh(true);
     } catch (error) {
-      toast.error(error.data || error.message);
+      error(error.data || error.message);
     }
   };
 

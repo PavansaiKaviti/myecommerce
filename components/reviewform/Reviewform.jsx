@@ -1,28 +1,29 @@
 "use client";
 import React, { useState } from "react";
-import toast from "react-hot-toast";
+import { useToast } from "@/components/toast/Toast";
+import { FaStar, FaRegStar } from "@/components/icons/Icons";
 
 const Reviewform = ({ productid }) => {
-  const [formdata, setformData] = useState({
-    message: "",
-    rating: 1,
-  });
+  const [rating, setRating] = useState(0);
+  const [message, setMessage] = useState("");
+  const [hover, setHover] = useState(null);
+  const { success, error } = useToast();
 
   const onchangeHandler = (e) => {
-    setformData({ ...formdata, [e.target.name]: e.target.value });
+    setMessage(e.target.value);
   };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
     // Check if productid and formdata are defined
-    if (!productid || !formdata) {
-      toast.error("Product ID and form data are required.");
+    if (!productid || !message) {
+      error("Product ID and message are required.");
       return;
     }
 
     try {
-      const newdata = { productid, ...formdata };
+      const newdata = { productid, message, rating };
       const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/reviews`, {
         method: "POST",
         headers: {
@@ -33,18 +34,16 @@ const Reviewform = ({ productid }) => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        toast.error(`Error: ${errorData.message || "Something went wrong"}`);
+        error(`Error: ${errorData.message || "Something went wrong"}`);
         return;
       }
 
       const data = await res.json();
-      toast.success(data.message);
-      setformData({
-        message: "",
-        rating: 1,
-      });
+      success(data.message);
+      setMessage("");
+      setRating(0);
     } catch (error) {
-      toast.error("An unexpected error occurred. Please try again.");
+      error("An unexpected error occurred. Please try again.");
       console.error("Error:", error);
     }
   };
@@ -58,15 +57,15 @@ const Reviewform = ({ productid }) => {
           className=" h-10 px-3 bg-gray-200 rounded-xl border-2  border-black-200"
           placeholder="write"
           name="message"
-          value={formdata.message}
+          value={message}
           onChange={onchangeHandler}
           required
         />
         <select
           name="rating"
           className=" h-10 px-3 w-20 bg-gray-200 rounded-xl border-2  border-black-200"
-          onChange={onchangeHandler}
-          value={formdata.rating}
+          onChange={(e) => setRating(Number(e.target.value))}
+          value={rating}
           required
         >
           <option value="1">1</option>

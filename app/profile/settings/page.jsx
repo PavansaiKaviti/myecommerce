@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/toast/Toast";
 import Image from "next/image";
 import {
   FaUser,
@@ -17,12 +17,14 @@ import {
   FaEyeSlash,
   FaSun,
   FaMoon,
+  FaPalette,
 } from "@/components/icons/Icons";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 const SettingsPage = () => {
   const { data: session, status } = useSession();
-  const { theme, changeTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
+  const { success, error } = useToast();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("account");
   const [language, setLanguage] = useState("en");
@@ -59,8 +61,8 @@ const SettingsPage = () => {
   };
 
   const handleThemeChange = (newTheme) => {
-    changeTheme(newTheme);
-    toast.success(`Theme changed to ${newTheme} mode`);
+    toggleTheme(newTheme);
+    success(`Theme changed to ${newTheme} mode`);
     if (newTheme === "dark") {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -73,7 +75,7 @@ const SettingsPage = () => {
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
-    toast.success(
+    success(
       `Language changed to ${newLanguage === "en" ? "English" : "Spanish"}`
     );
   };
@@ -85,9 +87,9 @@ const SettingsPage = () => {
     try {
       // Here you would typically make an API call to update user settings
       // For now, we'll just show a success message
-      toast.success("Settings updated successfully!");
+      success("Settings updated successfully!");
     } catch (error) {
-      toast.error("Failed to update settings");
+      error("Failed to update settings");
       console.error("Error updating settings:", error);
     } finally {
       setLoading(false);
@@ -526,7 +528,7 @@ const SettingsPage = () => {
                     <div className="pt-4">
                       <button
                         onClick={() =>
-                          toast.success("Preferences saved successfully!")
+                          success("Preferences saved successfully!")
                         }
                         className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                       >

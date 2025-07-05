@@ -9,13 +9,16 @@ import {
   additems,
   removecartitems,
 } from "@/app/globalstore/reduxslices/cartslice/Cart";
-import { toast } from "react-hot-toast";
 import Errorpage from "@/components/errorpages/Errorpage";
+import { useToast } from "@/components/toast/Toast";
+import { useSession } from "next-auth/react";
 
 const cart = () => {
   const product = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const [isClient, setIsClient] = useState(false);
+  const { data: session } = useSession();
+  const { success } = useToast();
 
   useEffect(() => {
     setIsClient(true);
@@ -23,6 +26,11 @@ const cart = () => {
 
   const addToCartHandler = async (product, qty) => {
     dispatch(additems({ ...product, qty }));
+  };
+
+  const removeItem = (id) => {
+    dispatch(removecartitems(id));
+    success("Item removed from cart");
   };
 
   // Show loading state until client-side hydration is complete
@@ -130,8 +138,7 @@ const cart = () => {
 
                           <button
                             onClick={() => {
-                              dispatch(removecartitems(item));
-                              toast.success("Item removed from cart");
+                              removeItem(item._id);
                             }}
                             className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                             title="Remove item"

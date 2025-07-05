@@ -82,12 +82,14 @@ global.console = {
 };
 
 // Mock toast notifications
-jest.mock("react-hot-toast", () => ({
-  toast: {
+jest.mock("@/components/toast/Toast", () => ({
+  useToast: jest.fn(() => ({
     success: jest.fn(),
     error: jest.fn(),
-    loading: jest.fn(),
-  },
+    warning: jest.fn(),
+    info: jest.fn(),
+    removeToast: jest.fn(),
+  })),
 }));
 
 // Mock DOMPurify

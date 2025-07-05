@@ -2,7 +2,14 @@
 import Loadingpage from "@/app/loading";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/toast/Toast";
+import {
+  FaEdit,
+  FaSave,
+  FaArrowLeft,
+  FaUpload,
+} from "@/components/icons/Icons";
 
 const Editproduct = () => {
   const [productdata, setProductdata] = useState({
@@ -15,6 +22,7 @@ const Editproduct = () => {
   });
   const [file, setfile] = useState("");
   const { id } = useParams();
+  const { success, error } = useToast();
 
   useEffect(() => {
     const fetchaproducts = async () => {
@@ -65,10 +73,10 @@ const Editproduct = () => {
       );
       if (res.status === 200) {
         const data = await res.json();
-        toast.success(data.message);
+        success(data.message);
         router.push(`/products/${id}`);
       } else {
-        toast.error("product unable to edit");
+        error("product unable to edit");
       }
     } catch (error) {
       console.log(error);

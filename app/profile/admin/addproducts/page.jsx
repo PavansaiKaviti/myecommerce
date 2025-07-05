@@ -2,11 +2,12 @@
 import Adminlink from "@/components/adminlink/Adminlink";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import toast from "react-hot-toast";
-import { FaImage, FaPlus } from "react-icons/fa";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/toast/Toast";
+import { FaImage, FaPlus, FaUpload, FaSave } from "react-icons/fa";
 
 const Addproducts = () => {
-  const [productdata, setProductdata] = useState({
+  const [formdata, setformData] = useState({
     name: "",
     description: "",
     brand: "",
@@ -16,9 +17,10 @@ const Addproducts = () => {
   });
   const [file, setfile] = useState("");
   const router = useRouter();
+  const { success, error } = useToast();
 
   const onchangeHandler = (e) => {
-    setProductdata({ ...productdata, [e.target.name]: e.target.value });
+    setformData({ ...formdata, [e.target.name]: e.target.value });
   };
 
   const onchangeimageHandler = (e) => {
@@ -29,12 +31,12 @@ const Addproducts = () => {
     try {
       e.preventDefault();
       const formdata = new FormData();
-      formdata.append("name", productdata.name);
-      formdata.append("description", productdata.description);
-      formdata.append("brand", productdata.brand);
-      formdata.append("category", productdata.category);
-      formdata.append("price", productdata.price);
-      formdata.append("countInStock", productdata.countInStock);
+      formdata.append("name", formdata.name);
+      formdata.append("description", formdata.description);
+      formdata.append("brand", formdata.brand);
+      formdata.append("category", formdata.category);
+      formdata.append("price", formdata.price);
+      formdata.append("countInStock", formdata.countInStock);
       formdata.append("image", file);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_DOMAIN_API}/admin/addproduct`,
@@ -42,10 +44,10 @@ const Addproducts = () => {
       );
       if (res.status === 200) {
         const data = await res.json();
-        toast.success(data.message);
+        success(data.message);
         router.push("/products");
       } else {
-        toast.error("product not uploaded");
+        error("product not uploaded");
       }
     } catch (error) {
       console.log(error);
@@ -127,7 +129,7 @@ const Addproducts = () => {
                   type="text"
                   id="name"
                   name="name"
-                  value={productdata.name}
+                  value={formdata.name}
                   onChange={onchangeHandler}
                   required
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
@@ -147,7 +149,7 @@ const Addproducts = () => {
                   type="text"
                   id="brand"
                   name="brand"
-                  value={productdata.brand}
+                  value={formdata.brand}
                   onChange={onchangeHandler}
                   required
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
@@ -167,7 +169,7 @@ const Addproducts = () => {
                   type="text"
                   id="category"
                   name="category"
-                  value={productdata.category}
+                  value={formdata.category}
                   onChange={onchangeHandler}
                   required
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
@@ -187,7 +189,7 @@ const Addproducts = () => {
                   type="number"
                   id="price"
                   name="price"
-                  value={productdata.price}
+                  value={formdata.price}
                   onChange={onchangeHandler}
                   required
                   min="0"
@@ -209,7 +211,7 @@ const Addproducts = () => {
                   type="number"
                   id="countInStock"
                   name="countInStock"
-                  value={productdata.countInStock}
+                  value={formdata.countInStock}
                   onChange={onchangeHandler}
                   required
                   min="0"
@@ -230,7 +232,7 @@ const Addproducts = () => {
               <textarea
                 id="description"
                 name="description"
-                value={productdata.description}
+                value={formdata.description}
                 onChange={onchangeHandler}
                 required
                 rows={4}

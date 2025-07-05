@@ -5,7 +5,7 @@ import { FaArrowLeft } from "@/components/icons/Icons";
 
 const Errorpage = ({ image, height, message, link }) => {
   return (
-    <div className="flex flex-col gap-5 justify-center items-center mb-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col gap-5 justify-center items-center">
       <div>
         <Image
           src={image}
@@ -15,10 +15,12 @@ const Errorpage = ({ image, height, message, link }) => {
           priority={true}
         />
       </div>
-      <div className="text-2xl">{message}....</div>
+      <div className="text-2xl text-gray-900 dark:text-white">
+        {message}....
+      </div>
       <Link
         href={link}
-        className="border flex items-center justify-center rounded-xl bg-black hover:bg-blue-500 p-2 text-white transition-colors"
+        className="border flex items-center justify-center rounded-xl bg-gray-900 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-blue-500 p-2 text-white transition-colors"
       >
         <FaArrowLeft className="mr-1" />
         Go Back
