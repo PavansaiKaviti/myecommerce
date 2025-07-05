@@ -36,6 +36,15 @@ export {
   FaImage,
   FaGoogle,
   FaSearch,
+  FaCreditCard,
+  FaShieldAlt,
+  FaPalette,
+  FaSun,
+  FaMoon,
+  FaTruck,
+  FaClock,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 
 // Social media icons

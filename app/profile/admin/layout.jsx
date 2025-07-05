@@ -23,15 +23,15 @@ export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#f7f8fa] flex">
+    <div className="min-h-screen bg-[#f7f8fa] dark:bg-gray-900 flex">
       {/* Sidebar */}
       <aside
-        className={`fixed z-40 inset-y-0 left-0 w-60 bg-white border-r border-gray-200 shadow-sm transform transition-transform duration-200 ease-in-out md:translate-x-0 ${
+        className={`fixed z-40 inset-y-0 left-0 w-60 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-sm transform transition-transform duration-200 ease-in-out md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0`}
       >
-        <div className="flex items-center justify-center h-16 border-b">
-          <span className="text-lg font-bold tracking-wide text-gray-800">
+        <div className="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-700">
+          <span className="text-lg font-bold tracking-wide text-gray-800 dark:text-white">
             Admin
           </span>
         </div>
@@ -40,10 +40,10 @@ export default function AdminLayout({ children }) {
             <Link
               key={link.href}
               href={link.href}
-              className={`flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition hover:bg-[#f2f3f5] text-gray-700 ${
+              className={`flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition hover:bg-[#f2f3f5] dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 ${
                 typeof window !== "undefined" &&
                 window.location.pathname === link.href
-                  ? "bg-[#e9eaf0] text-blue-700 font-bold"
+                  ? "bg-[#e9eaf0] dark:bg-gray-700 text-blue-700 dark:text-blue-300 font-bold"
                   : ""
               }`}
               onClick={() => setSidebarOpen(false)}

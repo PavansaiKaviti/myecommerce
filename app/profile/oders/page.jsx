@@ -1,185 +1,264 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import noOder from "@/public/images/nooder.jpg";
-import Errorpage from "@/components/errorpages/Errorpage";
-import Loadingpage from "@/app/loading";
 import {
-  FaBox,
+  FaBoxOpen,
+  FaTruck,
   FaCheckCircle,
   FaClock,
-  FaDollarSign,
-  FaEye,
-  FaDownload,
-} from "react-icons/fa";
+} from "@/components/icons/Icons";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
-const Orders = () => {
+const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const fetchOrders = async () => {
+      if (status === "loading") return;
+      if (!session?.user) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_API}/oders`);
-        const data = await res.json();
-        setOrders(data);
+        const response = await fetch("/api/oders");
+        const data = await response.json();
+
+        if (response.ok) {
+          setOrders(data);
+        } else {
+          setError(data.message || "Failed to fetch orders");
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching orders:", error);
+        setError("Failed to fetch orders");
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrders();
-  }, []);
+  }, [session, status]);
+
+  const getStatusIcon = (isDelivered) => {
+    if (isDelivered) {
+      return (
+        <FaCheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+      );
+    } else {
+      return (
+        <FaClock className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+      );
+    }
+  };
 
   const getStatusColor = (isDelivered) => {
-    return isDelivered
-      ? "bg-green-100 text-green-800"
-      : "bg-yellow-100 text-yellow-800";
+    if (isDelivered) {
+      return "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700";
+    } else {
+      return "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700";
+    }
   };
 
-  const getPaymentColor = (isPaid) => {
-    return isPaid ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-800";
+  const getStatusText = (isDelivered) => {
+    return isDelivered ? "Delivered" : "Processing";
   };
 
-  const formatOrderId = (id) => {
-    return id.slice(-8).toUpperCase();
-  };
+  if (status === "loading" || loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            My Orders
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            Track your order history and current shipments.
+          </p>
+        </div>
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    );
+  }
 
-  if (loading) {
-    return <Loadingpage />;
+  if (!session?.user) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            My Orders
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            Track your order history and current shipments.
+          </p>
+        </div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
+          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FaBoxOpen className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+            Please sign in
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            You need to be signed in to view your orders.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      {orders.length === 0 ? (
-        <Errorpage
-          image={noOder}
-          height={400}
-          message="No Orders yet"
-          link="/products"
-        />
-      ) : (
-        orders.map((order, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
-          >
-            {/* Order Header */}
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <FaBox className="w-5 h-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">
-                      Order #{formatOrderId(order._id)}
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          My Orders
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Track your order history and current shipments.
+        </p>
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4">
+          <p className="text-red-800 dark:text-red-200">{error}</p>
+        </div>
+      )}
+
+      {/* Orders List */}
+      <div className="space-y-4">
+        {orders.length === 0 ? (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
+            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FaBoxOpen className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              No orders yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Start shopping to see your orders here.
+            </p>
+            <a
+              href="/products"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg transition-colors"
+            >
+              Browse Products
+            </a>
+          </div>
+        ) : (
+          orders.map((order) => (
+            <div
+              key={order._id}
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm px-4 py-3 md:px-6 md:py-4 flex flex-col gap-2"
+            >
+              {/* Header Row */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 pb-2 border-b border-gray-100 dark:border-gray-700">
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    Order #{order._id.slice(-8)}
+                  </span>
+                  <span className="hidden md:inline">|</span>
+                  <span>
+                    Placed: {new Date(order.createdAt).toLocaleDateString()}
+                  </span>
+                  <span className="hidden md:inline">|</span>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(
+                      order.isDelivered
+                    )}`}
+                  >
+                    {getStatusIcon(order.isDelivered)}{" "}
+                    {getStatusText(order.isDelivered)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    Total:
+                  </span>
+                  <span className="text-blue-600 dark:text-blue-400 font-bold">
+                    ${order.totalPrice || 0}
+                  </span>
+                  <span
+                    className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${
+                      order.isPaid
+                        ? "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                        : "bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300"
+                    }`}
+                  >
+                    {order.isPaid ? "Paid" : "Pending"}
+                  </span>
+                </div>
+              </div>
+              {/* Products Row */}
+              <div className="flex flex-row gap-3 overflow-x-auto py-2">
+                {order.items?.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col items-center min-w-[90px] max-w-[120px]"
+                  >
+                    {item.image ? (
+                      <div className="w-14 h-14 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-700 mb-1">
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={56}
+                          height={56}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-14 h-14 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1">
+                        <FaBoxOpen className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+                      </div>
+                    )}
+                    <div className="text-xs text-gray-700 dark:text-gray-300 truncate w-full text-center">
+                      {item.name || "Product"}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Qty: {item.quantity || 1}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Collapsed Info Row */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 pt-2 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-400">
+                {order.shippindAddress && (
+                  <div>
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      Shipping:
+                    </span>{" "}
+                    {order.shippindAddress.address},{" "}
+                    {order.shippindAddress.city}, {order.shippindAddress.state}{" "}
+                    {order.shippindAddress.zipcode}{" "}
+                    <span className="ml-2">
+                      Phone: {order.shippindAddress.phone}
                     </span>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    {new Date(
-                      order.createdAt || Date.now()
-                    ).toLocaleDateString()}
-                  </span>
+                )}
+                <div>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    Payment:
+                  </span>{" "}
+                  {order.paymentMethod}
                 </div>
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl font-bold text-gray-900">
-                    ${order.totalPrice}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Order Content */}
-            <div className="p-6">
-              <div className="grid lg:grid-cols-3 gap-6">
-                {/* Product Images */}
-                <div className="lg:col-span-2">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Items
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {order.items.map((item) => (
-                      <div key={item._id}>
-                        <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            width={80}
-                            height={80}
-                            className="w-full h-full object-cover"
-                            priority={true}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Order Status */}
-                <div className="lg:col-span-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Order Status
-                  </h3>
-                  <div className="space-y-3">
-                    {/* Delivery Status */}
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        {order.isDelivered ? (
-                          <FaCheckCircle className="w-5 h-5 text-green-600" />
-                        ) : (
-                          <FaClock className="w-5 h-5 text-yellow-600" />
-                        )}
-                        <span className="font-medium text-gray-900">
-                          Delivery
-                        </span>
-                      </div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                          order.isDelivered
-                        )}`}
-                      >
-                        {order.isDelivered ? "Delivered" : "Processing"}
-                      </span>
-                    </div>
-
-                    {/* Payment Status */}
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <FaDollarSign className="w-5 h-5 text-gray-600" />
-                        <span className="font-medium text-gray-900">
-                          Payment
-                        </span>
-                      </div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${getPaymentColor(
-                          order.isPaid
-                        )}`}
-                      >
-                        {order.isPaid ? "Paid" : "Pending"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="mt-6 space-y-3">
-                    <button className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                      <FaEye className="w-4 h-4" />
-                      <span>View Details</span>
-                    </button>
-                    <button className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
-                      <FaDownload className="w-4 h-4" />
-                      <span>Download Invoice</span>
-                    </button>
-                  </div>
+                <div>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    Order ID:
+                  </span>{" "}
+                  {order._id}
                 </div>
               </div>
             </div>
-          </div>
-        ))
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
 };
 
-export default Orders;
+export default OrdersPage;

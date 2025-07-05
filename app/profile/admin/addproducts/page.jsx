@@ -53,12 +53,14 @@ const Addproducts = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Add New Product</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Add New Product
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Create a new product listing for your store
           </p>
         </div>
@@ -72,12 +74,12 @@ const Addproducts = () => {
         >
           {/* Left Side - Image Upload */}
           <div className="lg:w-1/3">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Product Image
             </h2>
             <label
               htmlFor="image"
-              className="w-full aspect-square max-w-[400px] flex items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 cursor-pointer relative overflow-hidden group hover:border-blue-400 transition-colors"
+              className="w-full aspect-square max-w-[400px] flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 cursor-pointer relative overflow-hidden group hover:border-blue-400 dark:hover:border-blue-500 transition-colors"
             >
               {file ? (
                 <img
@@ -86,12 +88,12 @@ const Addproducts = () => {
                   className="object-cover w-full h-full"
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-blue-400 transition-colors">
+                <div className="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 group-hover:text-blue-400 dark:group-hover:text-blue-300 transition-colors">
                   <FaImage className="text-5xl mb-3" />
                   <span className="text-lg font-medium">
                     Drag & Drop or Click
                   </span>
-                  <span className="text-sm text-gray-400 mt-1">
+                  <span className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                     Upload product image
                   </span>
                 </div>
@@ -108,7 +110,7 @@ const Addproducts = () => {
 
           {/* Right Side - Form Fields */}
           <div className="lg:w-2/3">
-            <h2 className="text-lg font-semibold text-gray-900 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
               Product Details
             </h2>
 
@@ -117,7 +119,7 @@ const Addproducts = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Product Name *
                 </label>
@@ -128,7 +130,7 @@ const Addproducts = () => {
                   value={productdata.name}
                   onChange={onchangeHandler}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Enter product name"
                 />
               </div>
@@ -137,7 +139,7 @@ const Addproducts = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="brand"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Brand *
                 </label>
@@ -148,7 +150,7 @@ const Addproducts = () => {
                   value={productdata.brand}
                   onChange={onchangeHandler}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Enter brand name"
                 />
               </div>
@@ -157,7 +159,7 @@ const Addproducts = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="category"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Category *
                 </label>
@@ -168,7 +170,7 @@ const Addproducts = () => {
                   value={productdata.category}
                   onChange={onchangeHandler}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Enter category"
                 />
               </div>
@@ -177,7 +179,7 @@ const Addproducts = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="price"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Price ($) *
                 </label>
@@ -190,7 +192,7 @@ const Addproducts = () => {
                   required
                   min="0"
                   step="0.01"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="0.00"
                 />
               </div>
@@ -199,7 +201,7 @@ const Addproducts = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="countInStock"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Stock Quantity *
                 </label>
@@ -211,19 +213,19 @@ const Addproducts = () => {
                   onChange={onchangeHandler}
                   required
                   min="0"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="0"
                 />
               </div>
             </div>
 
-            {/* Description - Full Width */}
+            {/* Description */}
             <div className="mt-6 space-y-2">
               <label
                 htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Product Description *
+                Description *
               </label>
               <textarea
                 id="description"
@@ -231,19 +233,19 @@ const Addproducts = () => {
                 value={productdata.description}
                 onChange={onchangeHandler}
                 required
-                rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base resize-none"
-                placeholder="Enter detailed product description..."
+                rows={4}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-vertical"
+                placeholder="Enter product description..."
               />
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end mt-8">
+            <div className="mt-8">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 flex items-center gap-2"
+                className="w-full bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
               >
-                <FaPlus className="text-sm" />
+                <FaPlus className="w-4 h-4" />
                 Add Product
               </button>
             </div>

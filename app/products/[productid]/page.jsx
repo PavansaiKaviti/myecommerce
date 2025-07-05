@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import Loadingpage from "@/app/loading";
 import Rating from "@/components/rating/Rating";
 import { additems } from "@/app/globalstore/reduxslices/cartslice/Cart";
 import { useDispatch } from "react-redux";
@@ -133,9 +132,95 @@ const Singleproduct = () => {
     }
   };
 
+  // Product Detail Skeleton
+  const ProductDetailSkeleton = () => (
+    <div className="animate-pulse">
+      {/* Product Image and Description Skeleton */}
+      <div className="flex lg:flex-row m-10 gap-6 flex-col">
+        {/* Image Skeleton */}
+        <div className="relative basis-1/2 rounded-2xl shadow-md">
+          <div className="w-full h-96 bg-gray-200 rounded-2xl"></div>
+          {/* Rating Skeleton */}
+          <div className="absolute top-1 right-1">
+            <div className="w-20 h-6 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+
+        {/* Description Skeleton */}
+        <div className="basis-1/2 p-10">
+          <div>
+            {/* Product Name and Brand */}
+            <div className="flex gap-4 justify-between mb-4">
+              <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+            </div>
+            <div className="border border-gray-100 mb-5"></div>
+
+            {/* Description */}
+            <div className="mb-4">
+              <div className="h-6 bg-gray-200 rounded mb-2"></div>
+              <div className="h-6 bg-gray-200 rounded mb-2"></div>
+              <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+            </div>
+            <div className="border border-gray-100 mb-5"></div>
+
+            {/* Stock and Quantity */}
+            <div className="flex flex-row justify-between mb-4">
+              <div className="w-24 h-10 bg-gray-200 rounded-2xl"></div>
+              <div className="flex items-center gap-2">
+                <div className="h-6 bg-gray-200 rounded w-8"></div>
+                <div className="w-20 h-10 bg-gray-200 rounded-2xl"></div>
+              </div>
+            </div>
+            <div className="border border-gray-100 mb-5"></div>
+
+            {/* Price and Button */}
+            <div className="flex flex-row justify-between">
+              <div className="h-10 bg-gray-200 rounded w-24"></div>
+              <div className="w-32 h-10 bg-gray-200 rounded-2xl"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Reviews Section Skeleton */}
+      <div className="m-10">
+        {/* Review Form Skeleton */}
+        <div className="flex justify-center gap-4 mb-6">
+          <div className="h-6 bg-gray-200 rounded w-24"></div>
+          <div className="h-10 bg-gray-200 rounded-xl w-48"></div>
+          <div className="h-10 bg-gray-200 rounded-xl w-16"></div>
+          <div className="h-10 bg-gray-200 rounded-xl w-16"></div>
+        </div>
+
+        {/* Reviews Title */}
+        <div className="h-6 bg-gray-200 rounded w-20 mb-4"></div>
+
+        {/* Reviews Grid Skeleton */}
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 m-3">
+          {[...Array(4)].map((_, index) => (
+            <div key={index} className="bg-gray-200 p-4 rounded-3xl">
+              <div className="flex flex-row gap-3 mb-3">
+                <div className="w-14 h-14 bg-gray-300 rounded-full"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-300 rounded w-24 mb-2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-20"></div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-300 rounded"></div>
+                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   // Show loading while session is loading to prevent hydration mismatch
   if (loading || status === "loading") {
-    return <Loadingpage loading={true} />;
+    return <ProductDetailSkeleton />;
   }
 
   return (

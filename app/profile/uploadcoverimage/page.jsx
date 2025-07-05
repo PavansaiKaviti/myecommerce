@@ -1,125 +1,154 @@
 "use client";
 import React, { useState } from "react";
-import { FaUpload, FaImage } from "@/components/icons/Icons";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { FaUpload, FaImage, FaCheck } from "@/components/icons/Icons";
 
-const UploadImage = () => {
-  const [file, setFile] = useState("");
-  const [preview, setPreview] = useState("");
-  const router = useRouter();
+const UploadCoverImage = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
 
-  const onchangeHandler = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreview(e.target.result);
-      };
-      reader.readAsDataURL(selectedFile);
+  const handleImageSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setUploaded(false);
     }
   };
 
-  const onsubmitHandler = async (e) => {
+  const handleUpload = async () => {
+    if (!selectedImage) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
     try {
-      e.preventDefault();
-      if (!file) {
-        toast.error("Please select a file");
-        return;
-      }
-      const formdata = new FormData();
-      formdata.append("image", file);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_DOMAIN_API}/profile/uploadimage`,
-        { method: "POST", body: formdata }
-      );
-      const data = await res.json();
-      if (res.status !== 200) {
-        toast.error(data.message, {
-          position: "top-center",
-        });
-      }
-      toast.success(data.message, {
-        position: "top-center",
+      const response = await fetch("/api/profile/coverimage", {
+        method: "POST",
+        body: formData,
       });
-      router.push("/profile");
+
+      if (response.ok) {
+        setUploaded(true);
+        setTimeout(() => {
+          setUploaded(false);
+          setSelectedImage(null);
+          setPreviewUrl("");
+        }, 2000);
+      } else {
+        console.error("Upload failed");
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error uploading image:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-      <div className="max-w-md mx-auto">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FaImage className="w-8 h-8 text-blue-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Upload Cover Image
-          </h2>
-          <p className="text-gray-600">Update your profile cover image</p>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Update Cover Image
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Upload a new cover image for your profile.
+        </p>
+      </div>
 
-        <form onSubmit={onsubmitHandler} className="space-y-6">
-          {/* File Upload Area */}
+      {/* Upload Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div className="max-w-md mx-auto">
+          {/* Image Preview */}
+          {previewUrl && (
+            <div className="mb-6">
+              <div className="relative w-full h-48 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Upload Area */}
           <div className="space-y-4">
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+            <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-colors">
               <input
                 type="file"
-                onChange={onchangeHandler}
                 accept="image/*"
+                onChange={handleImageSelect}
                 className="hidden"
-                id="file-upload"
+                id="image-upload"
               />
-              <label htmlFor="file-upload" className="cursor-pointer">
-                <div className="space-y-4">
-                  <FaUpload className="w-8 h-8 text-gray-400 mx-auto" />
-                  <div>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600 hover:text-blue-500">
-                        Click to upload
-                      </span>{" "}
-                      or drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
-                  </div>
+              <label
+                htmlFor="image-upload"
+                className="cursor-pointer flex flex-col items-center space-y-3"
+              >
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                  <FaImage className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    Click to upload image
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
                 </div>
               </label>
             </div>
 
-            {/* Preview */}
-            {preview && (
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-900">Preview:</h3>
-                <div className="relative h-32 bg-gray-100 rounded-lg overflow-hidden">
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
+            {/* Upload Button */}
+            {selectedImage && (
+              <button
+                onClick={handleUpload}
+                disabled={uploading}
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 text-white rounded-lg transition-colors"
+              >
+                {uploading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Uploading...</span>
+                  </>
+                ) : uploaded ? (
+                  <>
+                    <FaCheck className="w-4 h-4" />
+                    <span>Uploaded!</span>
+                  </>
+                ) : (
+                  <>
+                    <FaUpload className="w-4 h-4" />
+                    <span>Upload Image</span>
+                  </>
+                )}
+              </button>
             )}
           </div>
 
-          {/* Upload Button */}
-          <button
-            type="submit"
-            disabled={!file}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-          >
-            <FaUpload className="w-4 h-4" />
-            <span>Upload Image</span>
-          </button>
-        </form>
+          {/* Instructions */}
+          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+            <h3 className="text-sm font-medium text-blue-900 dark:text-blue-300 mb-2">
+              Tips for best results:
+            </h3>
+            <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+              <li>• Use high-resolution images (1920x1080 or higher)</li>
+              <li>• Choose images with good contrast</li>
+              <li>• Avoid text-heavy images</li>
+              <li>• Keep file size under 10MB</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default UploadImage;
+export default UploadCoverImage;

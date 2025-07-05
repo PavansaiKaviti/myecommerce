@@ -78,19 +78,19 @@ const Adminoders = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Orders Management
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Manage and track all customer orders
             </p>
           </div>
-          <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg font-medium">
+          <div className="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-lg font-medium">
             Total Orders: {orders.length}
           </div>
         </div>
@@ -105,32 +105,32 @@ const Adminoders = () => {
             {orders.map((order, index) => (
               <div
                 key={order._id}
-                className="bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200"
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-200"
               >
                 {/* Order Header */}
-                <div className="px-6 py-4 border-b border-gray-100">
+                <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                         <FaBox className="text-white" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                           Order #{index + 1}
                         </h3>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                           <FaHashtag className="text-blue-400" />
-                          <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                          <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs">
                             {truncateId(order._id)}
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xl font-bold text-black">
+                      <div className="text-xl font-bold text-black dark:text-white">
                         ${order.totalPrice}
                       </div>
-                      <div className="text-xs text-gray-500 flex items-center gap-1 justify-end">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 justify-end">
                         <FaCalendar className="text-xs" />
                         {formatDate(order.createdAt || new Date())}
                       </div>
@@ -144,15 +144,15 @@ const Adminoders = () => {
                     {/* Customer Info */}
                     {order.user && (
                       <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                        <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                           <FaUser className="text-blue-500" />
                           Customer
                         </div>
                         <div className="text-sm">
-                          <div className="font-semibold text-gray-900">
+                          <div className="font-semibold text-gray-900 dark:text-white">
                             {order.user.username || order.user.email}
                           </div>
-                          <div className="text-gray-500">
+                          <div className="text-gray-500 dark:text-gray-400">
                             {order.user.email}
                           </div>
                         </div>
@@ -161,15 +161,15 @@ const Adminoders = () => {
 
                     {/* Status */}
                     <div className="space-y-2">
-                      <div className="text-sm font-medium text-gray-700">
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Status
                       </div>
                       <div className="flex gap-2">
                         <div
                           className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
                             order.isPaid
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
+                              ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
+                              : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
                           }`}
                         >
                           {order.isPaid ? (
@@ -182,8 +182,8 @@ const Adminoders = () => {
                         <div
                           className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
                             order.isDelivered
-                              ? "bg-green-100 text-green-700"
-                              : "bg-yellow-100 text-yellow-700"
+                              ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
+                              : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300"
                           }`}
                         >
                           {order.isDelivered ? (
@@ -198,7 +198,7 @@ const Adminoders = () => {
 
                     {/* Actions */}
                     <div className="space-y-2">
-                      <div className="text-sm font-medium text-gray-700">
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Actions
                       </div>
                       <div className="flex gap-2">
@@ -220,7 +220,7 @@ const Adminoders = () => {
                   {/* Order Items */}
                   {order.orderItems && order.orderItems.length > 0 && (
                     <div className="mt-4 pt-4 border-t border-gray-100">
-                      <div className="text-sm font-medium text-gray-700 mb-3">
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                         Items ({order.orderItems.length})
                       </div>
                       <div className="flex gap-3 overflow-x-auto pb-2">

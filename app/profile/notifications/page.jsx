@@ -1,169 +1,163 @@
 "use client";
-import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import {
   FaBell,
-  FaTimes,
-  FaCheck,
-  FaStarIcon,
-  FaTag,
+  FaEnvelope,
+  FaShieldAlt,
   FaGift,
 } from "@/components/icons/Icons";
-import offers from "@/public/images/offers.jpg";
-import apple from "@/public/images/apple.jpg";
-import tech from "@/public/images/tech.jpg";
-import appliances from "@/public/images/appliances.jpg";
 
-const Notifications = () => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "offer",
-      title: "Amazon Sales - 50% Off",
-      message: "Huge discounts on electronics and home appliances",
-      image: offers,
-      time: "2 hours ago",
-      read: false,
-      priority: "high",
-    },
-    {
-      id: 2,
-      type: "deal",
-      title: "Apple Student Deals",
-      message: "Special pricing for students on MacBooks and iPads",
-      image: apple,
-      time: "1 day ago",
-      read: true,
-      priority: "medium",
-    },
-    {
-      id: 3,
-      type: "offer",
-      title: "Tech Deals - 50% Off",
-      message: "Amazing deals on smartphones and laptops",
-      image: tech,
-      time: "2 days ago",
-      read: false,
-      priority: "high",
-    },
-    {
-      id: 4,
-      type: "deal",
-      title: "Home Appliances Sale",
-      message: "Up to 40% off on kitchen and home appliances",
-      image: appliances,
-      time: "3 days ago",
-      read: true,
-      priority: "low",
-    },
-  ]);
-
-  const markAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
-    );
-  };
-
-  const deleteNotification = (id) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-  };
-
-  const unreadCount = notifications.filter((n) => !n.read).length;
-
+const NotificationsPage = () => {
   return (
-    <div className="space-y-4">
-      {notifications.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FaBell className="w-8 h-8 text-gray-400" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No notifications
-          </h3>
-          <p className="text-gray-600">
-            You're all caught up! Check back later for new offers.
-          </p>
-        </div>
-      ) : (
-        notifications.map((notification) => (
-          <div
-            key={notification.id}
-            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-6 transition-all duration-200 hover:shadow-md ${
-              !notification.read ? "border-l-4 border-l-blue-500" : ""
-            }`}
-          >
-            <div className="flex items-start space-x-4">
-              {/* Notification Image */}
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
-                  <Image
-                    src={notification.image}
-                    alt={notification.title}
-                    width={64}
-                    height={64}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Notifications
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Manage your notification preferences and view recent updates.
+        </p>
+      </div>
 
-              {/* Notification Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {notification.title}
-                      </h3>
-                      {!notification.read && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          New
-                        </span>
-                      )}
-                      {notification.priority === "high" && (
-                        <FaStarIcon className="w-4 h-4 text-yellow-500" />
-                      )}
-                    </div>
-                    <p className="text-gray-600 mb-2">{notification.message}</p>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span>{notification.time}</span>
-                      <div className="flex items-center space-x-1">
-                        {notification.type === "offer" ? (
-                          <FaTag className="w-3 h-3" />
-                        ) : (
-                          <FaGift className="w-3 h-3" />
-                        )}
-                        <span className="capitalize">{notification.type}</span>
-                      </div>
-                    </div>
-                  </div>
+      {/* Notification Settings */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+          Notification Preferences
+        </h2>
 
-                  {/* Action Buttons */}
-                  <div className="flex items-center space-x-2">
-                    {!notification.read && (
-                      <button
-                        onClick={() => markAsRead(notification.id)}
-                        className="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors"
-                        title="Mark as read"
-                      >
-                        <FaCheck className="w-4 h-4" />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => deleteNotification(notification.id)}
-                      className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Delete notification"
-                    >
-                      <FaTimes className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <FaBell className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <div>
+                <h3 className="font-medium text-gray-900 dark:text-white">
+                  Order Updates
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Get notified about order status changes
+                </p>
               </div>
             </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" defaultChecked />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
           </div>
-        ))
-      )}
+
+          <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <FaEnvelope className="w-5 h-5 text-green-600 dark:text-green-400" />
+              <div>
+                <h3 className="font-medium text-gray-900 dark:text-white">
+                  Email Notifications
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Receive updates via email
+                </p>
+              </div>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" defaultChecked />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <FaShieldAlt className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+              <div>
+                <h3 className="font-medium text-gray-900 dark:text-white">
+                  Security Alerts
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Important security notifications
+                </p>
+              </div>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" defaultChecked />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <FaGift className="w-5 h-5 text-red-600 dark:text-red-400" />
+              <div>
+                <h3 className="font-medium text-gray-900 dark:text-white">
+                  Promotional Offers
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Deals, discounts, and special offers
+                </p>
+              </div>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Notifications */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+          Recent Notifications
+        </h2>
+
+        <div className="space-y-4">
+          <div className="flex items-start space-x-3 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+            <FaBell className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-1" />
+            <div className="flex-1">
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                Order #12345 has been shipped
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                Your order is on its way! Track your package for real-time
+                updates.
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                2 hours ago
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+            <FaGift className="w-5 h-5 text-green-600 dark:text-green-400 mt-1" />
+            <div className="flex-1">
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                Special offer: 20% off on electronics
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                Limited time offer on all electronics. Use code: ELECTRONICS20
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                1 day ago
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3 p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
+            <FaShieldAlt className="w-5 h-5 text-purple-600 dark:text-purple-400 mt-1" />
+            <div className="flex-1">
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                Account security update
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                We've enhanced our security measures to better protect your
+                account.
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                3 days ago
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Notifications;
+export default NotificationsPage;

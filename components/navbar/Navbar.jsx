@@ -12,14 +12,18 @@ import {
   FaBars,
   FaTimes,
   FaSearch,
+  FaSun,
+  FaMoon,
 } from "@/components/icons/Icons";
 import profile from "@/assets/images/profile.png";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import { useSelector } from "react-redux";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
+  const { theme, changeTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const [providers, setproviders] = useState(null);
@@ -62,18 +66,24 @@ const Navbar = () => {
     setSearchQuery(e.target.value);
   };
 
+  // Handle theme toggle
+  const handleThemeToggle = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    changeTheme(newTheme);
+  };
+
   // Prevent hydration mismatch by not rendering cart count until client-side
   const shouldShowCartCount =
     isClient && status !== "loading" && numofitems > 0;
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white shadow-md">
+    <nav className="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/">
-              <span className="text-2xl font-extrabold tracking-tight text-gray-900">
+              <span className="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">
                 DINO
               </span>
             </Link>
@@ -85,9 +95,9 @@ const Navbar = () => {
               href="/"
               className={`${
                 pathname === "/"
-                  ? "bg-blue-50 text-blue-700 border border-blue-200"
-                  : "text-gray-700"
-              } hover:bg-blue-100 hover:text-blue-800 px-3 py-2 rounded-lg font-medium transition`}
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
+                  : "text-gray-700 dark:text-gray-300"
+              } hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-2 rounded-lg font-medium transition`}
             >
               Home
             </Link>
@@ -95,9 +105,9 @@ const Navbar = () => {
               href="/products"
               className={`${
                 pathname === "/products"
-                  ? "bg-blue-50 text-blue-700 border border-blue-200"
-                  : "text-gray-700"
-              } hover:bg-blue-100 hover:text-blue-800 px-3 py-2 rounded-lg font-medium transition`}
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
+                  : "text-gray-700 dark:text-gray-300"
+              } hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-2 rounded-lg font-medium transition`}
             >
               Products
             </Link>
@@ -105,9 +115,9 @@ const Navbar = () => {
               href="/products/cart"
               className={`relative ${
                 pathname === "/products/cart"
-                  ? "bg-blue-50 text-blue-700 border border-blue-200"
-                  : "text-gray-700"
-              } hover:bg-blue-100 hover:text-blue-800 px-3 py-2 rounded-lg font-medium transition flex items-center`}
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
+                  : "text-gray-700 dark:text-gray-300"
+              } hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-800 dark:hover:text-blue-200 px-3 py-2 rounded-lg font-medium transition flex items-center`}
             >
               Cart
               {shouldShowCartCount && (
@@ -123,12 +133,12 @@ const Navbar = () => {
                   type="text"
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="w-48 h-9 px-4 py-2 pr-10 border rounded-xl focus:outline-none focus:border-gray-500"
+                  className="w-48 h-9 px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-gray-500 dark:focus:border-gray-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Search products..."
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   <FaSearch className="w-4 h-4" />
                 </button>
@@ -138,7 +148,23 @@ const Navbar = () => {
 
           {/* Profile/Login (desktop) */}
           <div className="hidden md:flex md:items-center md:gap-4">
-            {session ? (
+            {/* Theme toggle button */}
+            <button
+              onClick={handleThemeToggle}
+              className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? (
+                <FaMoon className="w-5 h-5" />
+              ) : (
+                <FaSun className="w-5 h-5" />
+              )}
+            </button>
+
+            {status === "loading" ? (
+              // Show skeleton while session is loading
+              <div className="w-9 h-9 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+            ) : session ? (
               <div className="relative">
                 <button
                   type="button"
@@ -147,7 +173,7 @@ const Navbar = () => {
                   aria-label="Open user menu"
                 >
                   <Image
-                    className="h-9 w-9 rounded-full border"
+                    className="h-9 w-9 rounded-full border border-gray-200 dark:border-gray-600"
                     src={session.user.image || profile}
                     alt="profile"
                     width={36}
@@ -158,14 +184,14 @@ const Navbar = () => {
                 <div
                   className={`${
                     profileNav ? "" : "hidden"
-                  } absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+                  } absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 focus:outline-none border border-gray-200 dark:border-gray-700`}
                   role="menu"
                   aria-orientation="vertical"
                   tabIndex="-1"
                 >
                   <Link
                     href="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     role="menuitem"
                     tabIndex="-1"
                     onClick={() => setprofileNav(false)}
@@ -175,11 +201,11 @@ const Navbar = () => {
                       {session?.user?.name || "Your Profile"}
                     </div>
                   </Link>
-                  <div className="border-t my-1"></div>
+                  <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
                   {session.isAdmin && (
                     <Link
                       href="/profile/admin"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       role="menuitem"
                       tabIndex="-1"
                       onClick={() => setprofileNav(false)}
@@ -192,7 +218,7 @@ const Navbar = () => {
                   )}
                   <Link
                     href="/profile/notifications"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     role="menuitem"
                     tabIndex="-1"
                     onClick={() => setprofileNav(false)}
@@ -204,7 +230,7 @@ const Navbar = () => {
                   </Link>
                   <Link
                     href="/profile/oders"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     role="menuitem"
                     tabIndex="-1"
                     onClick={() => setprofileNav(false)}
@@ -215,7 +241,7 @@ const Navbar = () => {
                     </div>
                   </Link>
                   <button
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={() => signOut()}
                   >
                     <div className="flex items-center gap-2">
@@ -307,7 +333,13 @@ const Navbar = () => {
           </div>
           {/* Profile/Login (mobile) */}
           <div className="pt-2">
-            {session ? (
+            {status === "loading" ? (
+              // Show skeleton while session is loading
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+              </div>
+            ) : session ? (
               <div className="flex items-center gap-2">
                 <Image
                   className="h-8 w-8 rounded-full border"
