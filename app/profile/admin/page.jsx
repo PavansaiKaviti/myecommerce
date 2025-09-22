@@ -14,6 +14,8 @@ import {
   FaDollarSign,
   FaArrowUp,
   FaArrowDown,
+  FaEye,
+  FaCog,
 } from "@/components/icons/Icons";
 import Loadingpage from "@/app/loading";
 import { useToast } from "@/components/toast/Toast";
@@ -146,8 +148,16 @@ const Admin = () => {
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="text-2xl font-bold text-red-500 dark:text-red-400">
-          Not authorized
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FaCog className="w-8 h-8 text-red-500 dark:text-red-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Access Denied
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400">
+            You don't have permission to access this area.
+          </p>
         </div>
       </div>
     );
@@ -170,62 +180,120 @@ const Admin = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Admin Info Card */}
-      <div className="flex items-center gap-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 mt-4 mb-2 mx-4 border border-gray-200 dark:border-gray-700">
-        {session?.user?.image && (
-          <Image
-            src={session.user.image}
-            alt="profile"
-            width={64}
-            height={64}
-            className="rounded-full border border-gray-200 dark:border-gray-600 shadow"
-          />
-        )}
-        <div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            Welcome{session?.user?.name ? `, ${session.user.name}` : ""}!
+    <div className="space-y-6">
+      {/* Welcome Header */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
+        <div className="flex items-center gap-4">
+          {session?.user?.image && (
+            <div className="relative">
+              <Image
+                src={session.user.image}
+                alt="profile"
+                width={64}
+                height={64}
+                className="rounded-full border-4 border-white dark:border-gray-700 shadow-lg"
+              />
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-700"></div>
+            </div>
+          )}
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+              Welcome back{session?.user?.name ? `, ${session.user.name}` : ""}!
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 text-lg">
+              Here's what's happening with your store today.
+            </p>
           </div>
-          <div className="text-gray-500 dark:text-gray-400 text-base">
-            Admin Dashboard
-          </div>
-        </div>
-      </div>
-      {/* Analytics Section */}
-      {/* Stat Cards Row */}
-      <div className="flex gap-4 px-4 mb-4">
-        <div className="flex-1 bg-gradient-to-tr from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-2xl shadow flex flex-col items-center p-4 border border-transparent">
-          <FaBox className="text-3xl text-blue-500 mb-2" />
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-            {analytics.products}
-          </div>
-          <div className="text-gray-500 dark:text-gray-400 text-base">
-            Products
-          </div>
-        </div>
-        <div className="flex-1 bg-gradient-to-tr from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 rounded-2xl shadow flex flex-col items-center p-4 border border-transparent">
-          <FaBoxOpen className="text-3xl text-green-500 mb-2" />
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-            {analytics.orders}
-          </div>
-          <div className="text-gray-500 dark:text-gray-400 text-base">
-            Orders
-          </div>
-        </div>
-        <div className="flex-1 bg-gradient-to-tr from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 rounded-2xl shadow flex flex-col items-center p-4 border border-transparent">
-          <FaUsers className="text-3xl text-purple-500 mb-2" />
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-            {analytics.users}
-          </div>
-          <div className="text-gray-500 dark:text-gray-400 text-base">
-            Users
+          <div className="hidden md:flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <FaCog className="w-5 h-5 text-blue-500" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Admin Panel
+            </span>
           </div>
         </div>
       </div>
-      {/* Chart Row */}
-      <div className="px-4 mb-6">
-        <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow flex items-center justify-center min-h-[200px] border border-gray-200 dark:border-gray-700 p-4">
-          <ResponsiveContainer width="100%" height={200}>
+
+      {/* Analytics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                Total Products
+              </p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                {analytics.products}
+              </p>
+            </div>
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+              <FaBox className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                Total Orders
+              </p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                {analytics.orders}
+              </p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+              <FaBoxOpen className="w-6 h-6 text-green-600 dark:text-green-400" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                Total Users
+              </p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                {analytics.users}
+              </p>
+            </div>
+            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+              <FaUsers className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                Total Sales
+              </p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                ${analytics.sales.toLocaleString()}
+              </p>
+            </div>
+            <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl flex items-center justify-center">
+              <FaDollarSign className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Chart Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+              Analytics Overview
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Orders and users growth over time
+            </p>
+          </div>
+        </div>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={[
                 { month: "Jan", orders: 24, users: 10 },
@@ -236,100 +304,134 @@ const Admin = () => {
                 { month: "Jun", orders: 40, users: 30 },
               ]}
             >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+              <YAxis stroke="#6b7280" fontSize={12} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                }}
+              />
               <Legend />
               <Line
                 type="monotone"
                 dataKey="orders"
-                stroke="#34d399"
+                stroke="#10b981"
                 strokeWidth={3}
-                activeDot={{ r: 8 }}
+                activeDot={{ r: 8, fill: "#10b981" }}
                 name="Orders"
               />
               <Line
                 type="monotone"
                 dataKey="users"
-                stroke="#a78bfa"
+                stroke="#8b5cf6"
                 strokeWidth={3}
+                activeDot={{ r: 8, fill: "#8b5cf6" }}
                 name="Users"
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
-      {/* Dashboard Product Preview */}
-      <div className="px-4 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-gray-800 dark:text-white">
-            Products
-          </h3>
+
+      {/* Products Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+              Recent Products
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Manage your product catalog
+            </p>
+          </div>
           <Link
             href="/profile/admin/addproducts"
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
+            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
           >
+            <FaPlus className="w-4 h-4" />
             Add Product
           </Link>
         </div>
 
         {refresh ? (
-          <div className="text-center py-6">
-            <div className="text-gray-500">Loading products...</div>
+          <div className="text-center py-12">
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-500 dark:text-gray-400">
+              Loading products...
+            </p>
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-6 bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700">
-            <div className="text-gray-500 dark:text-gray-400 mb-2">
+          <div className="text-center py-12 bg-gray-50 dark:bg-gray-700/50 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+            <FaBox className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               No products found
-            </div>
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
+              Get started by adding your first product to the catalog.
+            </p>
             <Link
               href="/profile/admin/addproducts"
-              className="text-blue-500 hover:text-blue-600 font-medium"
+              className="inline-flex items-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
             >
+              <FaPlus className="w-4 h-4" />
               Add your first product
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {products.slice(0, 8).map((x) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {products.slice(0, 6).map((product) => (
               <div
-                key={x._id}
-                className="flex items-center bg-white dark:bg-gray-800 rounded-xl shadow p-3 gap-3 min-h-[72px] border border-gray-200 dark:border-gray-700"
+                key={product._id}
+                className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow"
               >
-                <div className="w-20 h-20 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center border border-gray-200 dark:border-gray-600">
-                  {x.image && (
-                    <Image
-                      src={x.image}
-                      alt={x.name}
-                      width={80}
-                      height={80}
-                      className="object-cover w-full h-full"
-                    />
-                  )}
-                </div>
-                <div className="flex-1 flex flex-col justify-center min-w-0">
-                  <div className="font-semibold text-gray-900 dark:text-white truncate">
-                    {x.name}
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center border border-gray-200 dark:border-gray-600 flex-shrink-0">
+                    {product.image ? (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={64}
+                        height={64}
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <FaBox className="w-6 h-6 text-gray-400" />
+                    )}
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    Stock: <span className="font-bold">{x.countInStock}</span>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-gray-900 dark:text-white truncate mb-1">
+                      {product.name}
+                    </h4>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Stock:{" "}
+                        <span className="font-semibold text-gray-700 dark:text-gray-300">
+                          {product.countInStock}
+                        </span>
+                      </span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">
+                        ${product.price}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="font-bold text-blue-600 text-base min-w-[60px] text-right dark:text-white">
-                  ${x.price}
-                </div>
-                <div className="flex flex-col gap-1 ml-2">
+                <div className="flex gap-2 mt-4">
                   <Link
-                    href={`/profile/admin/editproducts/${x._id}`}
-                    className="bg-blue-500 text-white px-3 py-1 rounded text-xs font-semibold hover:bg-blue-600 transition text-center"
+                    href={`/profile/admin/editproducts/${product._id}`}
+                    className="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors text-center flex items-center justify-center gap-1"
                   >
+                    <FaEdit className="w-3 h-3" />
                     Edit
                   </Link>
                   <button
-                    onClick={() => deleteProduct(x._id)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded text-xs font-semibold hover:bg-blue-600 transition text-center"
+                    onClick={() => deleteProduct(product._id)}
+                    className="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors text-center flex items-center justify-center gap-1"
                   >
+                    <FaTrash className="w-3 h-3" />
                     Delete
                   </button>
                 </div>
@@ -337,10 +439,25 @@ const Admin = () => {
             ))}
           </div>
         )}
+
+        {products.length > 6 && (
+          <div className="mt-6 text-center">
+            <Link
+              href="/profile/admin"
+              className="text-blue-500 hover:text-blue-600 font-medium text-sm"
+            >
+              View all products →
+            </Link>
+          </div>
+        )}
       </div>
-      <div className="mt-4 px-4">
-        <Pagination page={value} />
-      </div>
+
+      {/* Pagination */}
+      {products.length > 0 && (
+        <div className="flex justify-center">
+          <Pagination page={value} />
+        </div>
+      )}
     </div>
   );
 };

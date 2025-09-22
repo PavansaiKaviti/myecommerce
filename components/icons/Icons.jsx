@@ -58,6 +58,12 @@ export {
   FaExclamationCircle,
   FaInfoCircle,
   FaTimesCircle,
+  FaKey,
+  FaCalendar,
+  FaHashtag,
+  FaDollarSign,
+  FaArrowUp,
+  FaArrowDown,
 } from "react-icons/fa";
 
 // Social media icons
