@@ -9,8 +9,11 @@ import {
   FaLock,
   FaEye,
   FaEyeSlash,
+  FaArrowRight,
+  FaKey,
 } from "@/components/icons/Icons";
 import Link from "next/link";
+import Image from "next/image";
 
 const SignIn = () => {
   const router = useRouter();
@@ -26,6 +29,12 @@ const SignIn = () => {
   });
   const [error, setError] = useState("");
   const [focusedField, setFocusedField] = useState("");
+  const [showAddPassword, setShowAddPassword] = useState(false);
+  const [addPasswordData, setAddPasswordData] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+  const [showAddPasswordForm, setShowAddPasswordForm] = useState(false);
 
   useEffect(() => {
     // Check if user is already signed in
@@ -63,10 +72,78 @@ const SignIn = () => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-    setError(
-      "Email/password sign-in is not available. Please use Google sign-in."
-    );
-    setIsLoading(false);
+
+    try {
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        // Check if it's a Google-only account error
+        if (result.error.includes("Google")) {
+          setError(result.error);
+          setShowAddPasswordForm(true);
+        } else {
+          setError(result.error);
+        }
+      } else if (result?.ok) {
+        router.push(callbackUrl);
+      }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddPassword = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    if (addPasswordData.password !== addPasswordData.confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/add-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: addPasswordData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Sign in the user automatically
+        const signInResult = await signIn("credentials", {
+          email: formData.email,
+          password: addPasswordData.password,
+          redirect: false,
+        });
+
+        if (signInResult?.ok) {
+          router.push(callbackUrl);
+        } else {
+          router.push("/signin");
+        }
+      } else {
+        setError(data.error || "Failed to add password");
+      }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -76,178 +153,280 @@ const SignIn = () => {
     });
   };
 
+  const handleAddPasswordChange = (e) => {
+    setAddPasswordData({
+      ...addPasswordData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-slate-50 dark:from-slate-900 dark:via-purple-900 dark:to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
-            Welcome Back
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 text-lg">
-            Sign in to your account to continue
-          </p>
-        </div>
-
-        {/* Google Sign In Button */}
-        <button
-          onClick={handleGoogleSignIn}
-          disabled={isGoogleLoading}
-          className="w-full flex items-center justify-center gap-3 bg-white dark:bg-white/90 text-gray-700 border-2 border-gray-200 dark:border-white/30 rounded-2xl py-4 px-6 font-semibold hover:bg-gray-50 dark:hover:bg-white hover:scale-[1.02] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed mb-6 shadow-lg"
-        >
-          {isGoogleLoading ? (
-            <FaSpinner className="w-5 h-5 animate-spin" />
-          ) : (
-            <FaGoogle className="w-5 h-5 text-red-500" />
-          )}
-          {isGoogleLoading ? "Signing in..." : "Continue with Google"}
-        </button>
-
-        {/* Divider */}
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300 dark:border-white/20"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-transparent text-gray-500 dark:text-gray-300 font-medium">
-              Or continue with email
-            </span>
-          </div>
-        </div>
-
-        {/* Email/Password Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="block text-sm font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Email Address
-            </label>
-            <div className="relative group">
-              <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                onFocus={() => setFocusedField("email")}
-                onBlur={() => setFocusedField("")}
-                className={`w-full pl-10 pr-4 py-3 bg-white/80 dark:bg-white/10 border-2 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-4 transition-all duration-300 ${
-                  focusedField === "email"
-                    ? "border-purple-400 focus:ring-purple-500/30"
-                    : "border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30"
-                }`}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Password
-            </label>
-            <div className="relative group">
-              <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                onFocus={() => setFocusedField("password")}
-                onBlur={() => setFocusedField("")}
-                className={`w-full pl-10 pr-12 py-3 bg-white/80 dark:bg-white/10 border-2 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-4 transition-all duration-300 ${
-                  focusedField === "password"
-                    ? "border-purple-400 focus:ring-purple-500/30"
-                    : "border-gray-300 dark:border-white/20 hover:border-gray-400 dark:hover:border-white/30"
-                }`}
-                placeholder="Enter your password"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
-              >
-                {showPassword ? (
-                  <FaEyeSlash className="w-4 h-4" />
-                ) : (
-                  <FaEye className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4">
-              <p className="text-sm text-red-600 dark:text-red-300 font-medium">
-                {error}
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="flex min-h-screen">
+        {/* Left side - Form */}
+        <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+          <div className="mx-auto w-full max-w-sm lg:w-96">
+            <div>
+              <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Sign in to your account
+              </h2>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Or{" "}
+                <Link
+                  href="/signup"
+                  className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  create a new account
+                </Link>
               </p>
             </div>
-          )}
 
-          {/* Forgot Password Link */}
-          <div className="flex justify-end">
-            <Link
-              href="#"
-              className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium transition-colors hover:underline"
-            >
-              Forgot password?
-            </Link>
+            <div className="mt-8">
+              <div className="mt-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Google Sign In */}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={handleGoogleSignIn}
+                      disabled={isGoogleLoading}
+                      className="flex w-full items-center justify-center gap-3 rounded-md bg-white dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:ring-transparent transition-colors"
+                    >
+                      {isGoogleLoading ? (
+                        <FaSpinner className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <FaGoogle className="h-5 w-5" />
+                      )}
+                      {isGoogleLoading
+                        ? "Signing in..."
+                        : "Continue with Google"}
+                    </button>
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-300 dark:border-gray-600" />
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="bg-white dark:bg-gray-900 px-2 text-gray-500 dark:text-gray-400">
+                        Or continue with
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Error Message */}
+                  {error && (
+                    <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
+                      <div className="flex">
+                        <div className="ml-3">
+                          <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
+                            {error}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Add Password Form for Google Users */}
+                  {showAddPasswordForm && (
+                    <div className="rounded-md bg-blue-50 dark:bg-blue-900/20 p-4">
+                      <div className="flex">
+                        <div className="flex-shrink-0">
+                          <FaKey className="h-5 w-5 text-blue-400" />
+                        </div>
+                        <div className="ml-3">
+                          <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                            Link Your Account
+                          </h3>
+                          <div className="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                            <p>
+                              This account was created with Google. Add a
+                              password to enable email/password login as well.
+                            </p>
+                          </div>
+                          <form
+                            onSubmit={handleAddPassword}
+                            className="mt-4 space-y-4"
+                          >
+                            <div>
+                              <label
+                                htmlFor="new-password"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                              >
+                                Create Password
+                              </label>
+                              <input
+                                type="password"
+                                id="new-password"
+                                name="password"
+                                value={addPasswordData.password}
+                                onChange={handleAddPasswordChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400 sm:text-sm px-4 py-3"
+                                placeholder="Enter new password"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label
+                                htmlFor="confirm-password"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                              >
+                                Confirm Password
+                              </label>
+                              <input
+                                type="password"
+                                id="confirm-password"
+                                name="confirmPassword"
+                                value={addPasswordData.confirmPassword}
+                                onChange={handleAddPasswordChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400 sm:text-sm px-4 py-3"
+                                placeholder="Confirm new password"
+                                required
+                              />
+                            </div>
+                            <button
+                              type="submit"
+                              disabled={isLoading}
+                              className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
+                            >
+                              {isLoading
+                                ? "Adding password..."
+                                : "Add Password"}
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+                    >
+                      Email address
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        onFocus={() => setFocusedField("email")}
+                        onBlur={() => setFocusedField("")}
+                        className="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-3 px-4 text-gray-900 dark:text-white shadow-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400 sm:text-sm border"
+                        placeholder="Enter your email"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+                    >
+                      Password
+                    </label>
+                    <div className="mt-2">
+                      <div className="relative">
+                        <input
+                          id="password"
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="current-password"
+                          required
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          onFocus={() => setFocusedField("password")}
+                          onBlur={() => setFocusedField("")}
+                          className="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-3 px-4 pr-12 text-gray-900 dark:text-white shadow-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400 sm:text-sm border"
+                          placeholder="Enter your password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        >
+                          {showPassword ? (
+                            <FaEyeSlash className="h-4 w-4" />
+                          ) : (
+                            <FaEye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <input
+                        id="remember-me"
+                        name="remember-me"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-800"
+                      />
+                      <label
+                        htmlFor="remember-me"
+                        className="ml-2 block text-sm text-gray-900 dark:text-white"
+                      >
+                        Remember me
+                      </label>
+                    </div>
+
+                    <div className="text-sm">
+                      <Link
+                        href="#"
+                        className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+                      >
+                        Forgot your password?
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <FaSpinner className="h-4 w-4 animate-spin" />
+                          Signing in...
+                        </div>
+                      ) : (
+                        "Sign in"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] shadow-xl group"
-          >
-            {isLoading ? (
-              <div className="flex items-center justify-center gap-3">
-                <FaSpinner className="w-5 h-5 animate-spin" />
-                Signing in...
-              </div>
-            ) : (
-              <div className="flex items-center justify-center gap-3">
-                Sign In
-                <div className="w-4 h-4 bg-white/20 rounded-full group-hover:bg-white/30 transition-colors"></div>
-              </div>
-            )}
-          </button>
-        </form>
-
-        {/* Sign Up Link */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 dark:text-gray-300">
-            Don't have an account?{" "}
-            <Link
-              href="/signup"
-              className="font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors hover:underline"
-            >
-              Sign up
-            </Link>
-          </p>
         </div>
 
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <div className="flex justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
-            <button className="hover:text-gray-700 dark:hover:text-white transition-colors">
-              Help
-            </button>
-            <button className="hover:text-gray-700 dark:hover:text-white transition-colors">
-              Privacy
-            </button>
-            <button className="hover:text-gray-700 dark:hover:text-white transition-colors">
-              Terms
-            </button>
+        {/* Right side - Image */}
+        <div className="relative hidden w-0 flex-1 lg:block">
+          <div className="absolute inset-0 h-full w-full">
+            <Image
+              src="/images/apple.jpg"
+              alt="DINO Shopping"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center text-white">
+                <h1 className="text-4xl font-bold mb-4">DINO</h1>
+                <p className="text-xl opacity-90">
+                  Your trusted shopping destination
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
