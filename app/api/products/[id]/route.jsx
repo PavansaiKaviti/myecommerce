@@ -16,7 +16,7 @@ export const GET = async (request, { params }) => {
 
     // const productpopulate = await productfound.populate("reviews");
 
-    // console.log(productpopulate);
+    console.log(productpopulate);
 
     if (!productfound) {
       return new Response(JSON.stringify({ message: "No product found" }), {
