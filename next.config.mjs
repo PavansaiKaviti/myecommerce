@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Optimize build performance
-  swcMinify: false, // Disable SWC minification since we're using Babel
   experimental: {
     optimizeCss: true, // Enable CSS optimization
     optimizePackageImports: ["react-icons"], // Optimize react-icons imports
